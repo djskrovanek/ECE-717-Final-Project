@@ -50,8 +50,8 @@ tau_5 = r_fr * C_ds - r_mfs * C_mfs;
 gamma = 1 / (C_ds * C_fr - C_mfs^2);
 
 %% System dynamics and output 
-f = [u(4)*x(5) - x(2)*x(4) - x(1)/tau_1;
-    u(5)*x(5) + x(1)*x(4) - gamma*tau_3*x(2) - gamma*tau_3*x(3);
+f = [u(4)*x(5) - p/2*x(2)*x(4) - x(1)/tau_1;
+    u(5)*x(5) + p/2*x(1)*x(4) - gamma*tau_3*x(2) - gamma*tau_3*x(3);
     u(2) - gamma*tau_4*x(2) + gamma*tau_5*x(3);
     -beta*x(4)/J + u(1)/J + 3*p*C_fr*x(2)^2/(2*J) + 3*p*C_mfs*x(2)*x(3)/(2*J) - 3*p*gamma*x(1)*x(2)/(2*J) - 3*p*gamma*C_ds*x(1)*x(3)/(2*J);
     N*u(3)*u(6)/L_dc - r_dc * x(5)/L_dc - 3*gamma*C_fr*u(4)*x(2)/(2*L_dc) - 3*gamma*C_mfs*u(4)*x(3)/(2*L_dc) - 3*gamma*C_mfs*u(5)*x(2)/(2*L_dc) - 3*gamma*C_ds*u(5)*x(3)/(2*L_dc)
