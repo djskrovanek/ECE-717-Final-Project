@@ -50,12 +50,18 @@ r_fr = sym('r_fr', {'positive', 'real'});
 
 t    = sym('t', {'positive', 'real'});                                      %time variable
 
-tau_1 = r_qs * C_qs;
-alpha_1 = C_fr / r_ds - C_mfs / r_mfs;
-alpha_2 = C_mfs / r_ds - C_ds / r_mfs;
-alpha_3 = C_mfs / r_fr - C_fr / r_mfs;
-alpha_4 = C_ds / r_fr - C_mfs / r_mfs;
-gamma = 1 / (C_ds * C_fr - C_mfs^2);
+tau_1   = sym('tau_1', 'real');
+alpha_1 = sym('alpha_1', 'real');
+alpha_2 = sym('alpha_2', 'real');
+alpha_3 = sym('alpha_3', 'real');
+alpha_4 = sym('alpha_4', 'real');
+gamma   = sym('gamma', 'real');
+% tau_1 = r_qs * C_qs;
+% alpha_1 = C_fr / r_ds - C_mfs / r_mfs;
+% alpha_2 = C_mfs / r_ds - C_ds / r_mfs;
+% alpha_3 = C_mfs / r_fr - C_fr / r_mfs;
+% alpha_4 = C_ds / r_fr - C_mfs / r_mfs;
+% gamma = 1 / (C_ds * C_fr - C_mfs^2);
 
 vars = {i_ds, i_qs, i_fr, v_in, T_l, C_qs, r_qs,...
     C_lds, r_lds, C_lfr, r_lfr, C_mfs, r_mfs, J, beta, L_dc, r_dc, N,...
@@ -75,6 +81,13 @@ f = [u(4)*x(5) - z/2*x(2)*x(4) - x(1)/tau_1;
     N*u(3)*u(6)/L_dc - r_dc*x(5)/L_dc - 3*gamma*C_fr*u(4)*x(2)/(2*L_dc) - 3*gamma*C_mfs*u(4)*x(3)/(2*L_dc) - 3*gamma*C_mfs*u(5)*x(2)/(2*L_dc) - 3*gamma*C_ds*u(5)*x(3)/(2*L_dc)
     ];
 
+g = [Q_qs / C_qs;
+    gamma * C_fr * Q_ds + gamma * C_mfs * Q_fr;
+    gamma * C_mfs * Q_ds + gamma * C_ds * Q_fr;
+    w;
+    i_dc;
+    m_fe * N * v_in * N * i_dc
+    ];
 y = [v_qs; v_ds; v_fr; w; i_dc; P];
 
 %% Check if the solution solves the ODE
@@ -114,8 +127,8 @@ end
 %% Compute the linearization
 As = jacobian(f, x);
 Bs = jacobian(f, u);
-Cs = jacobian(y, x);
-Ds = jacobian(y, u);
+Cs = jacobian(g, x);
+Ds = jacobian(g, u);
 
 A = subs(As, [x;u], [xsol;usol]);
 B = subs(Bs, [x;u], [xsol;usol]);
