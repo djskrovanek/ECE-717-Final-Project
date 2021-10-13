@@ -39,7 +39,7 @@ beta = sym('beta', 'real');
 L_dc = sym('L_dc', {'positive', 'real'});
 r_dc = sym('r_dc', {'positive', 'real'});
 N    = sym('N', {'positive', 'real', 'integer'});
-z    = sym('p', {'positive', 'real', 'integer'});
+z    = sym('z', {'positive', 'real', 'integer'});
 m_fe = sym('m_fe', {'positive', 'real'});
 m_d  = sym('m_d', {'positive', 'real'});
 m_q  = sym('m_q', {'positive', 'real'});
@@ -59,10 +59,12 @@ gamma = 1 / (C_ds * C_fr - C_mfs^2);
 
 vars = {i_ds, i_qs, i_fr, v_in, T_l, C_qs, r_qs,...
     C_lds, r_lds, C_lfr, r_lfr, C_mfs, r_mfs, J, beta, L_dc, r_dc, N,...
-    z, m_fe, m_d, m_q, r_ds, C_fr, C_ds, r_fr};
+    z, m_fe, m_d, m_q, r_ds, C_fr, C_ds, r_fr, ...
+    v_qs, v_ds, v_fr, P, w};
 values = {-10, -10, 10, 100e3, 0.67e6, 512e-9, 502e3, ...
     430e-9, 82e3, 128e-9, 15e6, 82e-9, 420e3, 3.1e6, 10, 12, 12, 10, ...
-    96, -0.1, -0.1, -0.1, 502e3, 210e-9, 512e-9, 10};
+    96, -0.1, -0.1, -0.1, 502e3, 210e-9, 512e-9, 408.6e3, ...
+    100e3, 0, 175e3, 1e6, 1.5};
 
 %% System dynamics and output 
 f = [u(4)*x(5) - z/2*x(2)*x(4) - x(1)/tau_1;
@@ -82,7 +84,7 @@ xsol = ...
     w;
     m_fe * N * v_in - 3/2 * m_q * v_qs / r_dc
     ];
-xsol_num = 0;
+xsol_num = vpa(subs(xsol, vars, values));
 
 usol = ...
     [T_l;
@@ -92,12 +94,20 @@ usol = ...
     m_d;
     v_in
     ];
+usol_num = vpa(subs(usol, vars, values));
 
 dxdt = subs(f, [x;u], [xsol;usol]);
 if all(dxdt==jacobian(xsol,t))
     disp('xsol solves the ODE for usol');
 else
     disp('xsol does NOT solve the ODE for usol');
+end
+
+dxdt_num = subs(f, [x;u], [xsol_num; usol_num]);
+if all(dxdt_num==jacobian(xsol, t))
+    disp('xsol_num solves the ODE for usol');
+else
+    disp('xsol_num does NOT solve the ODE for usol');
 end
 
 %% Compute the linearization
