@@ -103,7 +103,7 @@ else
     disp('xsol does NOT solve the ODE for usol');
 end
 
-dxdt_num = subs(f, [x;u], [xsol_num; usol_num]);
+dxdt_num = subs(subs(f, [x;u], [xsol_num; usol_num]), vars, values);
 if all(dxdt_num==jacobian(xsol, t))
     disp('xsol_num solves the ODE for usol');
 else
