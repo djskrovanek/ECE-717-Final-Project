@@ -77,8 +77,8 @@ valueTable = table([string(vars); (values)].');                             %cli
 f = [u(4)*x(5) - z/2*x(2)*x(4) - x(1)/tau_1;
     u(5)*x(5) + z/2*x(1)*x(4) - gamma*alpha_1*x(2) - gamma*alpha_2*x(3);
     u(2) - gamma*alpha_3*x(2) + gamma*alpha_4*x(3);
-    -beta*x(4)/J + u(1)/J + 3*z*gamma*C_fr*x(2)^2/(2*J) + 3*z*gamma*C_mfs*x(2)*x(3)/(2*J) - 3*z*gamma*x(1)*x(2)/(2*J) - 3*z*gamma*C_ds*x(1)*x(3)/(2*J);
-    N*u(3)*u(6)/L_dc - r_dc*x(5)/L_dc - 3*gamma*C_fr*u(4)*x(2)/(2*L_dc) - 3*gamma*C_mfs*u(4)*x(3)/(2*L_dc) - 3*gamma*C_mfs*u(5)*x(2)/(2*L_dc) - 3*gamma*C_ds*u(5)*x(3)/(2*L_dc)
+    -beta*x(4)/J + u(1)/J + x(1)*x(2)*(3*z/(2*J*C_qs)-3*z*gamma*C_fr/(2*J)) - 3*z*gamma*C_mfs/(2*J)*x(1)*x(3);
+    N*u(3)*u(6)/L_dc - r_dc*x(5)/L_dc - 3*u(4)*x(1)/(2*L_dc*C_qs) - 3*C_fr*gamma*u(5)*x(2)/(2*L_dc) - 3*C_mfs*gamma*u(5)*x(3)/(2*L_dc)
     ];
 
 g = [Q_qs / C_qs;
