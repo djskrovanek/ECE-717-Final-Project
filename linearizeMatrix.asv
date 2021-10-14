@@ -78,7 +78,7 @@ f = [u(4)*x(5) - z/2*x(2)*x(4) - x(1)/tau_1;
     u(5)*x(5) + z/2*x(1)*x(4) - gamma*alpha_1*x(2) - gamma*alpha_2*x(3);
     u(2) - gamma*alpha_3*x(2) + gamma*alpha_4*x(3);
     -beta*x(4)/J + u(1)/J + x(1)*x(2)*(3*z/(2*J*C_qs)-3*z*gamma*C_fr/(2*J)) - 3*z*gamma*C_mfs/(2*J)*x(1)*x(3);
-    N*u(3)*u(6)/L_dc - r_dc*x(5)/L_dc - 3*u(4)*x(1)/(2*L_dc*C_qs) - 3*C_fr*gamma*u(5)*x(2)/(2*L_dc) - 3*C_mfs*gamma*u(5)
+    N*u(3)*u(6)/L_dc - r_dc*x(5)/L_dc - 3*u(4)*x(1)/(2*L_dc*C_qs) - 3*C_fr*gamma*u(5)*x(2)/(2*L_dc) - 3*C_mfs*gamma*u(5)*x(3)/(2*L_dc)
     ];
 
 g = [Q_qs / C_qs;
@@ -86,7 +86,7 @@ g = [Q_qs / C_qs;
     gamma * C_mfs * Q_ds + gamma * C_ds * Q_fr;
     w;
     i_dc;
-    m_fe * N * v_in * N * i_dc
+    m_fe * N * v_in * i_dc
     ];
 y = [v_qs; v_ds; v_fr; w; i_dc; P];
 
@@ -96,7 +96,7 @@ xsol = ...
     C_ds * v_ds - C_mfs * v_fr;
     -C_mfs * v_ds + C_fr * v_fr;
     w;
-    m_fe * N * v_in - 3/2 * m_q * v_qs / r_dc
+    m_fe * N * v_in - 3/2 * m_q * v_qs / r_dc % note: this equation likely , volts - amps
     ];
 xsol_num = vpa(subs(xsol, vars, values));
 

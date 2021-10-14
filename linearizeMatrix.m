@@ -86,7 +86,7 @@ g = [Q_qs / C_qs;
     gamma * C_mfs * Q_ds + gamma * C_ds * Q_fr;
     w;
     i_dc;
-    m_fe * N * v_in * N * i_dc
+    m_fe * N * v_in * i_dc
     ];
 y = [v_qs; v_ds; v_fr; w; i_dc; P];
 
@@ -96,7 +96,7 @@ xsol = ...
     C_ds * v_ds - C_mfs * v_fr;
     -C_mfs * v_ds + C_fr * v_fr;
     w;
-    m_fe * N * v_in - 3/2 * m_q * v_qs / r_dc
+    m_fe * N * v_in - 3/2 * m_q * v_qs / r_dc % note: this equation has an error since units don't match, volts - amps
     ];
 xsol_num = vpa(subs(xsol, vars, values));
 
