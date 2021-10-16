@@ -77,6 +77,19 @@ M_q = sym('M_q', {'real'});
 M_d = sym('M_d', {'real'});
 V_in = sym('V_in', {'real'});
 
+X_1 = sym('X_1', {'real'});
+X_2 = sym('X_2', {'real'});
+X_3 = sym('X_3', {'real'});
+X_4 = sym('X_4', {'real'});
+X_5 = sym('X_5', {'real'});
+
+U_1 = sym('U_1', {'real'});
+U_2 = sym('U_2', {'real'});
+U_3 = sym('U_3', {'real'});
+U_4 = sym('U_4', {'real'});
+U_5 = sym('U_5', {'real'});
+U_6 = sym('U_6', {'real'});
+
 
 vars = {i_ds, i_qs, i_fr, v_in, tor_l, C_qs, r_qs,...
     C_lds, r_lds, C_lfr, r_lfr, C_mfs, r_mfs, J, beta, L_dc, r_dc, N,...
@@ -118,13 +131,22 @@ y = [v_qs; v_ds; v_fr; w; i_dc; P];
 
 %% Check if the solution solves the ODE
 xsol = ...
+    [X_1;
+    X_2;
+    X_3;
+    X_4;
+    X_5;
+    ];
+
+%{
+    xsol = ...
     [Q_qs;
     Q_ds;
     Q_fr;
     W;
     I_dc;
     ];
-
+%}
 %{
 xsol = ...
     [C_qs * v_qs;
@@ -137,6 +159,16 @@ xsol = ...
 xsol_num = vpa(subs(xsol, vars, values));
 
 usol = ...
+    [U_1;
+    U_2;
+    U_3;
+    U_4;
+    U_5;
+    U_6;
+    ];
+
+%{
+usol = ...
     [Tor_l;
     I_fr;
     M_fe;
@@ -144,6 +176,8 @@ usol = ...
     M_d;
     V_in
     ];
+ %}
+
 usol_num = vpa(subs(usol, vars, values));
 
 dxdt = subs(f, [x;u], [xsol;usol]);
