@@ -9,8 +9,8 @@ v_qs = 100e3;
 v_fr = 175e3;
 we = 72; % electrical speed
 w = 1.5; % mechanical speed (rad/s)
-i_dc = 8; % Somewhat arbitrarily picked I_dc
-v_in = 15e3; %5e3; % may want to consider changing V_in
+I_dc = 8; % Somewhat arbitrarily picked I_dc
+V_in = 15e3; %5e3; % may want to consider changing V_in
 
 % parameters
 C_lds = 430e-9;
@@ -58,38 +58,38 @@ Q_fr = -C_mfs*v_ds+C_fr*v_fr;
 I_fr = Q_ds*gamma*alpha_3+Q_fr*gamma*alpha_4;
 
 % solve for required tau_l from omega dot = 0
-tor_l = beta*w-3*z/2*Q_ds*v_qs+3*z/2*Q_qs*v_ds;
+Tau_l = beta*w-3*z/2*Q_ds*v_qs+3*z/2*Q_qs*v_ds;
 
 % solve for required value of I_qs=M_q*I_dc and I_ds=M_d*I_dc
-i_qs = z/2*w*Q_ds+Q_qs/tau_1; % I_qs = M_q*I_dc
-i_ds = -z/2*w*Q_qs+Q_ds*gamma*alpha_1+Q_fr*gamma*alpha_2; % I_ds = M_d*I_dc
+I_qs = z/2*w*Q_ds+Q_qs/tau_1; % I_qs = M_q*I_dc
+I_ds = -z/2*w*Q_qs+Q_ds*gamma*alpha_1+Q_fr*gamma*alpha_2; % I_ds = M_d*I_dc
 
 % pick I_dc because that leads to linear equations to solve for M_q, M_d,
 % and M_fe
-m_q = i_qs/i_dc;
-m_d = i_ds/i_dc;
+M_q = I_qs/I_dc;
+M_d = I_ds/I_dc;
 
 % solve for required M_fe based on I_dc dot = 0
-m_fe= 1/(N*v_in)*(i_dc*r_dc+3/2*m_q*v_qs+3/2*m_d*v_ds);
+M_fe= 1/(N*V_in)*(I_dc*r_dc+3/2*M_q*v_qs+3/2*M_d*v_ds);
 
 % solve for mech power
-P_m = -tor_l*w;
+P_m = -Tau_l*w;
 % solve for output power to grid
-P = m_fe*N*v_in*i_dc;
+P_out = M_fe*N*V_in*I_dc;
 
 % calc efficiency
-Eta = P/P_m;
+Eta = P_out/P_m;
 
-vars = {'v_ds'; 'v_qs'; 'v_fr'; 'we'; 'w'; 'i_dc'; 'v_in'; 'C_lds'; 'C_lfr'; ...
-    'C_mfs'; 'C_qs'; 'z'; 'L_dc'; 'r_dc'; 'J'; 'beta'; 'N'; 'r_lds';...
+vars = {'V_ds'; 'V_qs'; 'V_fr'; 'We'; 'W'; 'I_dc'; 'V_in'; 'C_lds'; 'C_lfr'; ...
+    'C_mfs'; 'C_qs'; 'Pole count'; 'L_dc'; 'r_dc'; 'J'; 'beta'; 'N'; 'r_lds';...
     'r_lfr'; 'r_mfs'; 'r_qs'; 'C_ds'; 'C_fr'; 'r_ds'; 'r_fr'; 'tau_1'; 'alpha_1';...
-    'alpha_2'; 'alpha_3'; 'alpha_4'; 'gamma'; 'Q_qs'; 'Q_ds'; 'Q_fr'; 'i_fr';...
-    'tor_l'; 'i_qs'; 'i_ds'; 'm_q'; 'm_d'; 'm_fe'; 'P_m'; 'P'; 'Eta'};
-vals = [v_ds; v_qs; v_fr; we; w; i_dc; v_in; C_lds; C_lfr; ...
+    'alpha_2'; 'alpha_3'; 'alpha_4'; 'gamma'; 'Q_qs'; 'Q_ds'; 'Q_fr'; 'I_fr';...
+    'Tau_1'; 'I_qs'; 'I_ds'; 'M_q'; 'M_d'; 'M_fe'; 'P_m'; 'P_out'; 'Eta'};
+vals = [v_ds; v_qs; v_fr; we; w; I_dc; V_in; C_lds; C_lfr; ...
     C_mfs; C_qs; z; L_dc; r_dc; J; beta; N; r_lds;...
     r_lfr; r_mfs; r_qs; C_ds; C_fr; r_ds; r_fr; tau_1; alpha_1;...
     alpha_2; alpha_3; alpha_4; gamma; Q_qs; Q_ds; Q_fr; I_fr;...
-    tor_l; i_qs; i_ds; m_q; m_d; m_fe; P_m; P; Eta];
+    Tau_l; I_qs; I_ds; M_q; M_d; M_fe; P_m; P_out; Eta];
 eqPts = table(vars, vals);
 end
 

@@ -90,16 +90,25 @@ U_4 = sym('U_4', {'real'});
 U_5 = sym('U_5', {'real'});
 U_6 = sym('U_6', {'real'});
 
-
+tableParams = CalcEquilibrium();
 vars = {i_ds, i_qs, i_fr, v_in, tor_l, C_qs, r_qs,...
     C_lds, r_lds, C_lfr, r_lfr, C_mfs, r_mfs, J, beta, L_dc, r_dc, N,...
     z, m_fe, m_d, m_q, r_ds, C_fr, C_ds, r_fr, ...
     v_qs, v_ds, v_fr, P, w};
-values = {-10, -10, 10, 100e3, 0.67e6, 512e-9, 502e3, ...
-    430e-9, 82e3, 128e-9, 15e6, 82e-9, 420e3, 3.1e6, 10, 12, 12, 10, ...
-    96, -0.1, -0.1, -0.1, 502e3, 210e-9, 512e-9, 408.6e3, ...
-    100e3, 0, 175e3, 1e6, 1.5};
-valueTable = table([string(vars); (values)].');                             %click in Workspace to more easily read parameter assignments
+values = cell(1, length(vars));
+for i = 1:length(vars)
+    for j = 1:length(tableParams.vals)
+        if string(vars(i)) == string(tableParams.vars(j))
+            values(i) = table2cell(tableParams(j,2)); 
+            continue
+        end
+   end
+end
+% values = {-10, -10, 10, 100e3, 0.67e6, 512e-9, 502e3, ...
+%     430e-9, 82e3, 128e-9, 15e6, 82e-9, 420e3, 3.1e6, 10, 12, 12, 10, ...
+%     96, -0.1, -0.1, -0.1, 502e3, 210e-9, 512e-9, 408.6e3, ...
+%     100e3, 0, 175e3, 1e6, 1.5};
+%valueTable = table([string(vars); (values)].');                             %click in Workspace to more easily read parameter assignments
 
 %% System dynamics and output 
 f = [u(4)*x(5) - z/2*x(2)*x(4) - x(1)/tau_1;
