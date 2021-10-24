@@ -9,10 +9,37 @@ v_qs = 100e3;
 v_fr = 175e3;
 we = 72; % electrical speed
 w = 1.5; % mechanical speed (rad/s)
-i_dc = 8; % Somewhat arbitrarily picked I_dc
+i_dc = 24; % 8 % Somewhat arbitrarily picked I_dc
 v_in = 15e3; %5e3; % may want to consider changing V_in
 
 % parameters
+
+N = 10; % N is picked somewhat arbitrarily
+
+% read rest of parameters from table
+paramMap = ScaleParameters();
+
+C_lds = paramMap('C_lds');
+C_lfr = paramMap('C_lfr');
+C_mfs = paramMap('C_mfs');
+C_qs = paramMap('C_qs');
+z = paramMap('z');
+L_dc = paramMap('L_dc');
+r_dc = paramMap('r_dc');
+J = paramMap('J');
+beta = paramMap('beta');
+r_lds = paramMap('r_lds');
+r_lfr = paramMap('r_lfr');
+r_mfs = paramMap('r_mfs');
+r_qs = paramMap('r_qs');
+C_ds = paramMap('C_ds');
+C_fr = paramMap('C_fr');
+r_ds = paramMap('r_ds');
+r_fr = paramMap('r_fr');
+
+
+%{
+% original parameters
 C_lds = 430e-9;
 C_lfr = 128e-9;
 C_mfs = 82e-9;
@@ -22,19 +49,20 @@ L_dc = 12;
 r_dc = 12;
 J = 3.1e6;
 beta = 10;
-N = 10;
 r_lds = 82e3;
 r_lfr = 15e6;
 r_mfs = 420e3;
 r_qs = 502e3;
 
-
-
 % derived parameters
 C_ds = C_lds + C_mfs;
 C_fr = C_lfr + C_mfs;
-r_ds = r_mfs + r_lds;
-r_fr = r_lfr + r_mfs;
+r_ds = r_mfs + r_lds; % note this is incorrect
+r_fr = r_lfr + r_mfs; % note this is incorrect
+%}
+
+
+% derived parameters
 
 tau_1 = r_qs * C_qs;
 %tau_2 = r_ds * C_fr - r_mfs * C_mfs;
