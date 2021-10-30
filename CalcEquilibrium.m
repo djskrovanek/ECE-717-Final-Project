@@ -9,12 +9,9 @@ v_qs = 100e3;
 v_fr = 175e3;
 we = 72; % electrical speed
 w = 1.5; % mechanical speed (rad/s)
-i_dc = 24; % 8 % Somewhat arbitrarily picked I_dc
-v_in = 15e3; %5e3; % may want to consider changing V_in
+i_dc = 48; % 8 % Somewhat arbitrarily picked I_dc
 
 % parameters
-
-N = 10; % N is picked somewhat arbitrarily
 
 % read rest of parameters from table
 paramMap = ScaleParameters();
@@ -36,10 +33,15 @@ C_ds = paramMap('C_ds');
 C_fr = paramMap('C_fr');
 r_ds = paramMap('r_ds');
 r_fr = paramMap('r_fr');
+v_in = paramMap('v_in');
+N = paramMap('N');
 
 
 %{
 % original parameters
+
+v_in = 15e3; %5e3; % may want to consider changing V_in
+
 C_lds = 430e-9;
 C_lfr = 128e-9;
 C_mfs = 82e-9;
@@ -53,6 +55,8 @@ r_lds = 82e3;
 r_lfr = 15e6;
 r_mfs = 420e3;
 r_qs = 502e3;
+
+N = 10; % N is picked somewhat arbitrarily
 
 % derived parameters
 C_ds = C_lds + C_mfs;
@@ -89,8 +93,8 @@ I_fr = Q_ds*gamma*alpha_3+Q_fr*gamma*alpha_4;
 tor_l = beta*w-3*z/2*Q_ds*v_qs+3*z/2*Q_qs*v_ds;
 
 % solve for required value of I_qs=M_q*I_dc and I_ds=M_d*I_dc
-i_qs = z/2*w*Q_ds+Q_qs/tau_1; % I_qs = M_q*I_dc
-i_ds = -z/2*w*Q_qs+Q_ds*gamma*alpha_1+Q_fr*gamma*alpha_2; % I_ds = M_d*I_dc
+i_qs = z*w*Q_ds+Q_qs/tau_1; % I_qs = M_q*I_dc
+i_ds = -z*w*Q_qs+Q_ds*gamma*alpha_1+Q_fr*gamma*alpha_2; % I_ds = M_d*I_dc
 
 % pick I_dc because that leads to linear equations to solve for M_q, M_d,
 % and M_fe
@@ -108,11 +112,12 @@ P = m_fe*N*v_in*i_dc;
 % calc efficiency
 Eta = P/P_m;
 
-vars = {'v_ds'; 'v_qs'; 'v_fr'; 'we'; 'w'; 'i_dc'; 'v_in'; 'C_lds'; 'C_lfr'; ...
+% uppercase letters denote nominal operating point at equilibrium
+vars = {'V_ds'; 'V_qs'; 'V_fr'; 'We'; 'W'; 'I_dc'; 'V_in'; 'C_lds'; 'C_lfr'; ...
     'C_mfs'; 'C_qs'; 'z'; 'L_dc'; 'r_dc'; 'J'; 'beta'; 'N'; 'r_lds';...
     'r_lfr'; 'r_mfs'; 'r_qs'; 'C_ds'; 'C_fr'; 'r_ds'; 'r_fr'; 'tau_1'; 'alpha_1';...
-    'alpha_2'; 'alpha_3'; 'alpha_4'; 'gamma'; 'Q_qs'; 'Q_ds'; 'Q_fr'; 'i_fr';...
-    'tor_l'; 'i_qs'; 'i_ds'; 'm_q'; 'm_d'; 'm_fe'; 'P_m'; 'P'; 'Eta'};
+    'alpha_2'; 'alpha_3'; 'alpha_4'; 'gamma'; 'Q_qs'; 'Q_ds'; 'Q_fr'; 'I_fr';...
+    'Tor_l'; 'I_qs'; 'I_ds'; 'M_q'; 'M_d'; 'M_fe'; 'P_m'; 'P'; 'Eta'};
 vals = [v_ds; v_qs; v_fr; we; w; i_dc; v_in; C_lds; C_lfr; ...
     C_mfs; C_qs; z; L_dc; r_dc; J; beta; N; r_lds;...
     r_lfr; r_mfs; r_qs; C_ds; C_fr; r_ds; r_fr; tau_1; alpha_1;...

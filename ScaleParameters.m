@@ -29,6 +29,7 @@ C_lfr1 = 3.41e-9;
 % Peter's drive parameters
 L_dc1 = 3.4;
 R_dc1 = 40;
+NVin1 = 7.4*280; % N*Vin
 
 
 % desired ratings for our machine (machine 2)
@@ -39,6 +40,8 @@ W_mR2 = 1.5; % rad/s
 
 H2 = 3.5; % inertia constant [s]
 beta2 = 10; % [Nm/s], this value was assumed. Scaling lab SEM beta would give too much friction.
+
+V_in2 = 10e3; % dc input (grid) voltage [V] 
 
 %% calculations
 
@@ -66,6 +69,7 @@ X_lfr1_pu = 1/(W_B1*C_lfr1)*1/Z_B1;
 
 X_Ldc1_pu = W_B1*L_dc1/Z_B1;
 R_dc1_pu = R_dc1/Z_B1;
+NVin1_pu = NVin1/V_B1;
 
 
 % calculate base quantities for machine 2
@@ -83,6 +87,9 @@ Z_B2 = V_B2/I_B2; % [Ohm]
 % keep same pu reactance X_L and resistance
 L_dc2 = Z_B2*X_Ldc1_pu/W_B2;
 R_dc2 = Z_B2*R_dc1_pu;
+
+NVin2 = NVin1_pu*V_B2;
+N2 = NVin2/V_in2;
 
 % scale machine reactances, keeping same pu
 
@@ -133,10 +140,10 @@ J2 = 2*P_R2*H2/W_mR2^2; % [kg*m^2]
 % save all params to a file
 paramNames = {'C_lds', 'C_lfr', 'C_mfs', 'C_qs', 'C_ds', 'C_fr', 'z', ...
     'L_dc', 'r_dc', 'J', 'beta', 'r_lds', 'r_lfr', 'r_mfs', 'r_qs', ...
-    'r_ds', 'r_fr'};
+    'r_ds', 'r_fr', 'v_in', 'N'};
 paramVals = {C_lds2, C_lfr2, C_mfs2, C_qs2, C_ds2, C_fr2, p2,...
     L_dc2, R_dc2, J2, beta2, R_lds2, R_lfr2, R_mfs2, R_qs2,...
-    R_ds2, R_fr2};
+    R_ds2, R_fr2, V_in2, N2};
 %paramTable = table(paramNames, paramVals);
 paramMap = containers.Map(paramNames, paramVals);
 end

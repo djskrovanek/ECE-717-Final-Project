@@ -8,24 +8,24 @@ u = sym('u', [6, 1]);                                                       %inp
 assumeAlso(u, 'real');
 
 % x matrix parameters
-q_qs = sym('q_qs', 'real');
-q_ds = sym('q_ds', 'real');
-q_fr = sym('q_fr', 'real');
+Q_qs = sym('q_qs', 'real');
+Q_ds = sym('q_ds', 'real');
+Q_fr = sym('q_fr', 'real');
 w    = sym('w', 'real');
-i_dc = sym('i_dc', 'real');
+I_dc = sym('i_dc', 'real');
 
 % y matrix parameters 
-v_qs = sym('v_qs', 'real');
-v_ds = sym('v_ds', 'real');
-v_fr = sym('v_fr', 'real');
+V_qs = sym('v_qs', 'real');
+V_ds = sym('v_ds', 'real');
+V_fr = sym('v_fr', 'real');
 P    = sym('P', 'real');
 
 % other parameters and constants 
-i_ds = sym('i_ds', 'real');
-i_qs = sym('i_qs', 'real');
-i_fr = sym('i_fr', 'real');
-v_in = sym('v_in', 'real');
-tor_l  = sym('tor_l', 'real'); % torque
+I_ds = sym('I_ds', 'real');
+I_qs = sym('I_qs', 'real');
+I_fr = sym('I_fr', 'real');
+V_in = sym('V_in', 'real');
+Tor_l  = sym('Tor_l', 'real'); % torque
 C_qs = sym('C_qs', {'positive', 'real'});
 r_qs = sym('r_qs', {'positive', 'real'});
 C_lds= sym('C_lds', {'positive', 'real'});
@@ -40,9 +40,9 @@ L_dc = sym('L_dc', {'positive', 'real'});
 r_dc = sym('r_dc', {'positive', 'real'});
 N    = sym('N', {'positive', 'real', 'integer'});
 z    = sym('z', {'positive', 'real', 'integer'});
-m_fe = sym('m_fe', {'positive', 'real'});
-m_d  = sym('m_d', {'positive', 'real'});
-m_q  = sym('m_q', {'positive', 'real'});
+M_fe = sym('M_fe', {'positive', 'real'});
+M_d  = sym('M_d', {'positive', 'real'});
+M_q  = sym('M_q', {'positive', 'real'});
 r_ds = sym('r_ds', {'positive', 'real'});
 C_fr = sym('C_fr', {'positive', 'real'});
 C_ds = sym('C_ds', {'positive', 'real'});
@@ -91,11 +91,12 @@ U_5 = sym('U_5', {'real'});
 U_6 = sym('U_6', {'real'});
 
 tableParams = CalcEquilibrium();
-vars = {i_ds, i_qs, i_fr, v_in, tor_l, C_qs, r_qs,...
-    C_lds, r_lds, C_lfr, r_lfr, C_mfs, r_mfs, J, beta, L_dc, r_dc, N,...
-    z, m_fe, m_d, m_q, r_ds, C_fr, C_ds, r_fr, ...
-    v_qs, v_ds, v_fr, P, w};
-values = cell(1, length(vars));
+vars = {'V_ds'; 'V_qs'; 'V_fr'; 'We'; 'W'; 'I_dc'; 'V_in'; 'C_lds'; 'C_lfr'; ...
+    'C_mfs'; 'C_qs'; 'z'; 'L_dc'; 'r_dc'; 'J'; 'beta'; 'N'; 'r_lds';...
+    'r_lfr'; 'r_mfs'; 'r_qs'; 'C_ds'; 'C_fr'; 'r_ds'; 'r_fr'; 'tau_1'; 'alpha_1';...
+    'alpha_2'; 'alpha_3'; 'alpha_4'; 'gamma'; 'Q_qs'; 'Q_ds'; 'Q_fr'; 'I_fr';...
+    'Tor_l'; 'I_qs'; 'I_ds'; 'M_q'; 'M_d'; 'M_fe'; 'P_m'; 'P'; 'Eta'};
+values = cell(length(vars), 1);
 for i = 1:length(vars)
     for j = 1:length(tableParams.vals)
         if string(vars(i)) == string(tableParams.vars(j))
@@ -104,6 +105,7 @@ for i = 1:length(vars)
         end
    end
 end
+
 % values = {-10, -10, 10, 100e3, 0.67e6, 512e-9, 502e3, ...
 %     430e-9, 82e3, 128e-9, 15e6, 82e-9, 420e3, 3.1e6, 10, 12, 12, 10, ...
 %     96, -0.1, -0.1, -0.1, 502e3, 210e-9, 512e-9, 408.6e3, ...
@@ -111,9 +113,9 @@ end
 %valueTable = table([string(vars); (values)].');                             %click in Workspace to more easily read parameter assignments
 
 %% System dynamics and output 
-f = [u(4)*x(5) - z/2*x(2)*x(4) - x(1)/tau_1;
-    u(5)*x(5) + z/2*x(1)*x(4) - gamma*alpha_1*x(2) - gamma*alpha_2*x(3);
-    u(2) - gamma*alpha_3*x(2) + gamma*alpha_4*x(3);
+f = [u(4)*x(5) - z*x(2)*x(4) - x(1)/tau_1;
+    u(5)*x(5) + z*x(1)*x(4) - gamma*alpha_1*x(2) - gamma*alpha_2*x(3);
+    u(2) - gamma*alpha_3*x(2) - gamma*alpha_4*x(3);
     -beta*x(4)/J + u(1)/J + x(1)*x(2)*(3*z/(2*J*C_qs)-3*z*gamma*C_fr/(2*J)) - 3*z*gamma*C_mfs/(2*J)*x(1)*x(3);
     N*u(3)*u(6)/L_dc - r_dc*x(5)/L_dc - 3*u(4)*x(1)/(2*L_dc*C_qs) - 3*C_fr*gamma*u(5)*x(2)/(2*L_dc) - 3*C_mfs*gamma*u(5)*x(3)/(2*L_dc)
     ];
@@ -136,7 +138,7 @@ g = [q_qs / C_qs;
     ];
 %}
     
-y = [v_qs; v_ds; v_fr; w; i_dc; P];
+%y = [v_qs; v_ds; v_fr; w; i_dc; P];
 
 %% Check if the solution solves the ODE
 xsol = ...
@@ -147,15 +149,17 @@ xsol = ...
     X_5;
     ];
 
-%{
-    xsol = ...
+
+xsol_num = ...
     [Q_qs;
     Q_ds;
     Q_fr;
     W;
     I_dc;
     ];
-%}
+
+    
+%xsol_num = vpa(subs(xsol, vars, values));
 %{
 xsol = ...
     [C_qs * v_qs;
@@ -165,7 +169,6 @@ xsol = ...
     m_fe * N * v_in - 3/2 * m_q * v_qs / r_dc % note: this equation has an error since units don't match, volts - amps
     ];
 %}
-xsol_num = vpa(subs(xsol, vars, values));
 
 usol = ...
     [U_1;
@@ -176,8 +179,7 @@ usol = ...
     U_6;
     ];
 
-%{
-usol = ...
+usol_num = ...
     [Tor_l;
     I_fr;
     M_fe;
@@ -185,9 +187,8 @@ usol = ...
     M_d;
     V_in
     ];
- %}
 
-usol_num = vpa(subs(usol, vars, values));
+%usol_num = vpa(subs(usol, vars, values));
 
 dxdt = subs(f, [x;u], [xsol;usol]);
 if all(dxdt==jacobian(xsol,t))
@@ -197,7 +198,9 @@ else
 end
 
 dxdt_num = subs(subs(f, [x;u], [xsol_num; usol_num]), vars, values);
-if all(dxdt_num==jacobian(xsol, t))
+error_num = dxdt_num-jacobian(xsol, t); % numerical error, should be near 0
+epsilon = 1e-9; % some tolerance for numerical errors
+if all(error_num < epsilon)
     disp('xsol_num solves the ODE for usol');
 else
     disp('xsol_num does NOT solve the ODE for usol');
