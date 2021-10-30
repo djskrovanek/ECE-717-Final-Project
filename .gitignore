@@ -1,0 +1,8 @@
+# ignore the following directories
+html/
+
+# ignore these file types
+*.asv
+*.html
+
+
