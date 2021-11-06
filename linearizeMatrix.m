@@ -1,6 +1,3 @@
-clear
-clc
-
 %% Defining variables
 x = sym('x', [5, 1]);                                                       %state vector
 assumeAlso(x, 'real');
