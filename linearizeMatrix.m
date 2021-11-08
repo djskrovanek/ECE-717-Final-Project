@@ -1,3 +1,5 @@
+function [A_num, B_num, C_num, D_num] = linearizeMatrix()
+
 %% Defining variables
 x = sym('x', [5, 1]);                                                       %state vector
 assumeAlso(x, 'real');
@@ -146,8 +148,8 @@ xsol = ...
     X_5;
     ];
 
-
-xsol_num = ...
+% components of xsol in terms of physical symbolic variables
+xsol_vars = ...
     [Q_qs;
     Q_ds;
     Q_fr;
@@ -155,8 +157,7 @@ xsol_num = ...
     I_dc;
     ];
 
-    
-%xsol_num = vpa(subs(xsol, vars, values));
+xsol_num = double(subs(xsol_vars, vars, values));
 %{
 xsol = ...
     [C_qs * v_qs;
@@ -176,7 +177,8 @@ usol = ...
     U_6;
     ];
 
-usol_num = ...
+% components of xsol in terms of physical symbolic variables
+usol_vars = ...
     [Tor_l;
     I_fr;
     M_fe;
@@ -185,7 +187,7 @@ usol_num = ...
     V_in
     ];
 
-%usol_num = vpa(subs(usol, vars, values));
+usol_num = double(subs(usol_vars, vars, values));
 
 dxdt = subs(f, [x;u], [xsol;usol]);
 if all(dxdt==jacobian(xsol,t))
@@ -209,7 +211,16 @@ Bs = jacobian(f, u);
 Cs = jacobian(g, x);
 Ds = jacobian(g, u);
 
+% matrices in terms of symbolic parameters
 A = subs(As, [x;u], [xsol;usol]);
 B = subs(Bs, [x;u], [xsol;usol]);
 C = subs(Cs, [x;u], [xsol;usol]);
 D = subs(Ds, [x;u], [xsol;usol]);
+
+% matrices with numerical values substituted
+A_num = double(subs(A, [vars; xsol; usol], [cell2mat(values); xsol_num; usol_num]));
+B_num = double(subs(B, [vars; xsol; usol], [cell2mat(values); xsol_num; usol_num]));
+C_num = double(subs(C, [vars; xsol; usol], [cell2mat(values); xsol_num; usol_num]));
+D_num = double(subs(D, [vars; xsol; usol], [cell2mat(values); xsol_num; usol_num]));
+
+end
