@@ -1,6 +1,6 @@
 clear all; close all; clc;
 
-[A, B, C, D] = linearizeMatrix(); % numerical matrices
+[A, B, C, D, ~, ~, ~, ~, ~] = linearizeMatrix(); % numerical matrices
 
 n = size(A,1); % size of state space
 
@@ -8,7 +8,7 @@ n = size(A,1); % size of state space
 %% check properties of open loop linearized system
 
 [eigvecs, d] = eigs(A); % matrix of eigenvectors and diagonal matrix of eigenvalues
-eigvals = diag(d); % vector of eigenvalues
+eigvals = diag(d) % vector of eigenvalues
 
 % check stability
 if (real(eigvals) < zeros(size(eigvals)))

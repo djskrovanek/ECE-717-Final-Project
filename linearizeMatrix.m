@@ -1,4 +1,8 @@
-function [A_num, B_num, C_num, D_num] = linearizeMatrix()
+% returns matrices A, B, C, and D for the linearized system, and the
+% solution X, U, Y it is linearized about. Also returns function handles
+% for the original nonlinear system x_dot = f(x,u), y = g(x,u)
+function [A_num, B_num, C_num, D_num, xsol_num, usol_num, ysol_num,... 
+    f_func, g_func] = linearizeMatrix()
 
 %% Defining variables
 x = sym('x', [5, 1]);                                                       %state vector
@@ -127,6 +131,7 @@ g = [x(1) / C_qs;
     u(3) * N * u(6) * x(5)
     ];
 
+
 %{
 g = [q_qs / C_qs;
     gamma * C_fr * q_ds + gamma * C_mfs * q_fr;
@@ -136,8 +141,17 @@ g = [q_qs / C_qs;
     m_fe * N * v_in * i_dc
     ];
 %}
+
     
 %y = [v_qs; v_ds; v_fr; w; i_dc; P];
+
+% build a function handle of f and g for nonlinear simulation
+
+f_num = subs(f, vars, values);
+f_func = matlabFunction(f_num, 'Vars',{x, u}); % f(x,u) function handle
+
+g_num = subs(g, vars, values);
+g_func = matlabFunction(g_num, 'Vars',{x, u}); % g(x,u) function handle
 
 %% Check if the solution solves the ODE
 xsol = ...
@@ -189,6 +203,8 @@ usol_vars = ...
 
 usol_num = double(subs(usol_vars, vars, values));
 
+ysol_num = g_func(xsol_num, usol_num); % output at equilibrium
+
 dxdt = subs(f, [x;u], [xsol;usol]);
 if all(dxdt==jacobian(xsol,t))
     disp('xsol solves the ODE for usol');
@@ -204,6 +220,7 @@ if all(error_num < epsilon)
 else
     disp('xsol_num does NOT solve the ODE for usol');
 end
+
 
 %% Compute the linearization
 As = jacobian(f, x);
