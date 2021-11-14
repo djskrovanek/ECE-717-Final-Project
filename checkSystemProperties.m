@@ -33,6 +33,22 @@ else
     disp('Open-loop system is not observable.')
 end
 
+% compute transfer matrix
+
+s = sym('s', 'real');
+
+G = C/(s*eye(size(A,1))-A)*B+D;
+
+% compute H2 norm and H_infinity norm 
+
+sys = ss(A, B, C, D);
+[Hinf, f_pk] = norm(sys, inf); % peak gain and its frequency
+
+% must neglect feedthrough term D for H2 norm to converge
+sys_2 = ss(A, B, C, 0);
+H2 = norm(sys_2,2); % norm magnitude
+
+
 
 %% helper functions
 
@@ -51,4 +67,3 @@ function O = buildO(A,C)
         O = [O; C*A^k];
     end
 end
-

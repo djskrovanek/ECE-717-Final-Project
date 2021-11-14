@@ -5,6 +5,8 @@ for i = 1:height(params)
     assignin('base', string(table2array(params(i,1))), double(table2array(params(i,2))));
 end
 
+[~, u_B, x_B, y_B] = CalcBaseVals(); % get base values for signals
+
 % get linearized matrices, equilibrium point, and nonlinear functions
 [A, B, C, D, X, U, Y, f, g] = linearizeMatrix();
 
@@ -39,9 +41,9 @@ legend()
 
 
 
-%% simulate a step increase in torque to 1% beyond rated value
+%% simulate a step increase in torque to 0.5% beyond rated value
 
-u2 = @(t) [U(1)*1.01; U(2:6)]*ones(size(t)); % step in torque from rated to 101% at t = 0
+u2 = @(t) [U(1)*1.005; U(2:6)]*ones(size(t)); % step in torque at t = 0
 
 tf2 = 1000; % stop time [sec]
 
@@ -68,9 +70,50 @@ ylabel('Output power $p_{out}$ (MW)', 'Interpreter', 'latex')
 %ylim([0, 2*Y(6)])
 legend()
 
-%{
+% calculate normalized (pu) outputs and states
+
+X_pu = X./x_B;
+Y_pu = Y./y_B;
+U_pu = U./u_B;
+
+yn_lti2 = y_lti2./y_B;
+xn_lti2 = x_lti2./x_B;
+yn_nl2 = y_nl2./y_B;
+xn_nl2 = x_nl2./x_B;
+
+
+% plot all states and outputs vs time
+figure();
+yLabels = ["x1", "x2", "x3", "x4", "x5"];
+for i = 1:length(X)
+    subplot(length(X),1, i)
+    plot(t_lti2, xn_lti2(i,:), 'DisplayName', 'LTI');
+    hold on;
+    plot(t_nl2, xn_nl2(i,:), 'DisplayName', 'NL');
+    ylabel(yLabels(i), 'Interpreter', 'latex')
+    legend('Location', 'Southwest')
+end
+sgtitle('PU states vs time with torque step')
+xlabel('Time (s)', 'Interpreter', 'latex')
+
+figure();
+yLabels = ["y1", "y2", "y3", "y4", "y5", "y6"];
+for i = 1:length(Y)
+    subplot(length(Y),1, i)
+    plot(t_lti2, yn_lti2(i,:), 'DisplayName', 'LTI');
+    hold on;
+    plot(t_nl2, yn_nl2(i,:), 'DisplayName', 'NL');
+    ylabel(yLabels(i), 'Interpreter', 'latex')
+    legend('Location', 'Southwest')
+end
+sgtitle('PU outputs vs time with torque step')
+xlabel('Time (s)', 'Interpreter', 'latex')
+
+
+
 %% simulate a step increase in Mfe to 1% beyond rated value
 
+%{
 u3 = @(t) [U(1:2); 1.01*U(3); U(4:6)]*ones(size(t)); % step in m_fe from rated to 101% at t = 0
 
 tf3 = 600; % stop time [sec]
@@ -91,6 +134,7 @@ legend()
 
 
 
+
 %% helper functions
 
 % simulate NL system with given parameters
@@ -100,8 +144,10 @@ legend()
 % t: either [t0, tf] with auto step or a row vector of time points to use
 % x0: initial state
 function [t_nl, u_nl, x_nl, y_nl] = simNL(f, g, u, t, x0)
+    opts = odeset('RelTol',1e-4, 'Refine', 4); % solver settings
     %[t_nl, x_nl] = ode45(@(t,x) f(x,u(t)),t,x0); % non-stiff solver
-    [t_nl, x_nl] = ode15s(@(t,x) f(x,u(t)),t,x0); % stiff solver
+    [t_nl, x_nl] = ode15s(@(t,x) f(x,u(t)),t,x0, opts); % stiff solver
+    %[t_nl, x_nl] = ode23s(@(t,x) f(x,u(t)),t,x0); % stiff solver
     t_nl = t_nl'; % % t(1,i) is time at time i
     x_nl = x_nl'; % x(i,j) is state i at time j
     u_nl = u(t_nl); % u as a vector vs time
@@ -136,6 +182,3 @@ function [t_lti, u_lti, x_lti, y_lti] = simLTI(A, B, C, D, X, U, Y, u, t, x0)
     y_lin = C*x_lin+D*u_lin(t_lti); 
     y_lti = y_lin+Y; % y(i,j) is output i at time j
 end
-
-
-
