@@ -33,6 +33,15 @@ else
     disp('Open-loop system is not observable.')
 end
 
+%% check BIBO stability
+for i = 1:n
+    [~, den] = ss2tf(A,B,C,D, i);
+    P = roots(den); %compute poles of transfer function
+    stable = any(P>0);
+    if stable == 1
+        disp(['Not BIBO stable for', num2str(i), ' input'])
+    end
+end
 
 %% helper functions
 
