@@ -54,7 +54,8 @@ W_mB1 = W_mR1;
 W_B1 = p1*W_mB1; % note for electrostatic machine w_r=p*w_rm instead of p/2*w_rm
 
 T_R1 = 1; % rated torque [pu]
-I_B1 = P_B1/(3*V_B1); % [A]
+% Note: P=3/2*V*I because we are using peak, not rms
+I_B1 = P_B1/(3/2*V_B1); % [A] 
 Z_B1 = V_B1/I_B1; % [Ohm]
 
 % calculate pu parameters
@@ -79,7 +80,7 @@ W_mB2 = W_mR2;
 W_B2 = p2*W_mB2; % note for electrostatic machine w_r=p*w_rm instead of p/2*w_rm
 
 T_B2 = P_B2/W_mB2;
-I_B2 = P_B2/(3*V_B2); % [A]
+I_B2 = P_B2/(3/2*V_B2); % [A]
 Z_B2 = V_B2/I_B2; % [Ohm]
 
 % scale drive parameters

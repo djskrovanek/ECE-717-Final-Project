@@ -60,4 +60,3 @@ function O = buildO(A,C)
         O = [O; C*A^k];
     end
 end
-
