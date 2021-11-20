@@ -4,5 +4,6 @@ html/
 # ignore these file types
 *.asv
 *.html
+*.r2021a
 
 
