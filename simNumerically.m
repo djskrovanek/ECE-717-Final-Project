@@ -23,20 +23,21 @@ x0 = X; % initial state
 
 u1 = @(t) U*ones(size(t)); % constant input at equilibrium value
 
-tf1 = 100; % stop time [sec]
+tf1 = 1000; % stop time [sec]
 
 [t_nl1, u_nl1, x_nl1, y_nl1] = simNL(f, g, u1, [t0, tf1], x0);
 [t_lti1, u_lti1, x_lti1, y_lti1] = simLTI(A, B, C, D, X, U, Y, u1, [t0 tf1], x0);
 
+
 figure();
 hold on;
-plot(t_nl1, y_nl1(6,:)*1e-6, 'DisplayName', 'NL')
-plot(t_lti1, y_lti1(6,:)*1e-6, 'DisplayName', 'LTI')
-title('Output power vs time at equilibrium point')
-xlabel('Time (s)')
-ylabel('Output power (MW)')
-%ylim([0, 2*Y(6)])
-legend()
+plot(t_nl1, getNorm(y_nl1,2), 'DisplayName', 'NL')
+plot(t_lti1, getNorm(y_lti1,2), 'DisplayName', 'LTI')
+title('Norm of output vs. time', 'Interpreter','latex')
+xlabel('Time $(s)$', 'Interpreter','latex')
+ylabel('Output norm $||y(t)||_2$', 'Interpreter','latex')
+ylim([9.5e5, 9.52e5])
+legend('Interpreter','latex')
 
 
 
@@ -131,4 +132,14 @@ ylabel('Output power (MW)')
 %ylim([0, 2*Y(6)])
 legend()
 %}
+
+% calculate the p norm of each column of the signal x(t). If x(t) has states
+% in row i and times in column j, this returns the p norm of x at each
+% time.
+function Xnorm = getNorm(x,p)
+    Xnorm = zeros(1, size(x,2));
+    for i = 1:size(Xnorm,2)
+        Xnorm(i) = norm(x(:,i),p);
+    end
+end
 
