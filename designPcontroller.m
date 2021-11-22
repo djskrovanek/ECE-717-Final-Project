@@ -10,11 +10,8 @@ B_red = B(:, 2:5); % B with reduced set of actuators u2:u5
 
 % an arbitrary set of poles to place
 % p(i) corresponds to eigenvalue for state x(i) after flipping
-%p = 100*[100*-0.1, -0.1, -0.5, -0.01, -0.01]; % unflip
 p = [-10 -10 -10 -0.1 -500];
 p = flip(p); % flip vector
-
-%p = [-0.1, -0.001, -0.5, -0.01, -0.01];
 
 [K,prec] = place(A,B_red,p); % place poles
 

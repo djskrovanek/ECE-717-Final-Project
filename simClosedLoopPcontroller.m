@@ -91,26 +91,3 @@ for i = 1:length(Y)
 end
 sgtitle('PU outputs vs time with torque step')
 xlabel('Time (s)', 'Interpreter', 'latex')
-
-
-
-%% simulate a step increase in Mfe to 1% beyond rated value
-
-%{
-u3 = @(t) [U(1:2); 1.01*U(3); U(4:6)]*ones(size(t)); % step in m_fe from rated to 101% at t = 0
-
-tf3 = 600; % stop time [sec]
-
-[t_nl3, u_nl3, x_nl3, y_nl3] = simNL(f, g, u3, [t0, tf3], x0);
-[t_lti3, u_lti3, x_lti3, y_lti3] = simLTI(A, B, C, D, X, U, Y, u2, [t0 tf3], x0);
-
-figure();
-hold on;
-plot(t_nl3, y_nl3(6,:)*1e-6, 'DisplayName', 'NL')
-plot(t_lti3, y_lti3(6,:)*1e-6, 'DisplayName', 'LTI')
-title('Output power vs time with $m_{fe}$ step', 'Interpreter', 'latex')
-xlabel('Time (s)')
-ylabel('Output power (MW)')
-%ylim([0, 2*Y(6)])
-legend()
-%}
