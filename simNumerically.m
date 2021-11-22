@@ -31,8 +31,8 @@ tf1 = 1000; % stop time [sec]
 
 figure();
 hold on;
-plot(t_nl1, getNorm(y_nl1,2), 'DisplayName', 'NL')
 plot(t_lti1, getNorm(y_lti1,2), 'DisplayName', 'LTI')
+plot(t_nl1, getNorm(y_nl1,2), 'DisplayName', 'NL')
 title('Norm of output vs. time', 'Interpreter','latex')
 xlabel('Time $(s)$', 'Interpreter','latex')
 ylabel('Output norm $||y(t)||_2$', 'Interpreter','latex')
@@ -84,32 +84,121 @@ xn_nl2 = x_nl2./x_B;
 
 
 % plot all states and outputs vs time
-figure();
+% figure();
+% yLabels = ["x1", "x2", "x3", "x4", "x5"];
+% for i = 1:length(X)
+%     subplot(3,2, i)
+%     plot(t_lti2, xn_lti2(i,:), 'DisplayName', 'LTI');
+%     hold on;
+%     plot(t_nl2, xn_nl2(i,:), 'DisplayName', 'NL');
+%     ylabel(yLabels(i), 'Interpreter', 'latex')
+%     %legend('Location', 'Southwest')
+% end
+% subplot(3,2,6)
+% sgtitle('PU states vs time with torque step')
+% xlabel('Time (s)', 'Interpreter', 'latex')
+
+%plot and tweak states vs time
 yLabels = ["x1", "x2", "x3", "x4", "x5"];
-for i = 1:length(X)
-    subplot(length(X),1, i)
-    plot(t_lti2, xn_lti2(i,:), 'DisplayName', 'LTI');
-    hold on;
-    plot(t_nl2, xn_nl2(i,:), 'DisplayName', 'NL');
-    ylabel(yLabels(i), 'Interpreter', 'latex')
-    legend('Location', 'Southwest')
-end
+
+figure
+subplot(3,2, 1)
+plot(t_lti2, xn_lti2(1,:), 'DisplayName', 'LTI');
+hold on;
+plot(t_nl2, xn_nl2(1,:), 'DisplayName', 'NL');
+ylabel(yLabels(1), 'Interpreter', 'latex')
+
+subplot(3,2, 2)
+plot(t_lti2, xn_lti2(2,:), 'DisplayName', 'LTI');
+hold on;
+plot(t_nl2, xn_nl2(2,:), 'DisplayName', 'NL');
+ylabel(yLabels(2), 'Interpreter', 'latex')
+
+subplot(3,2, 3)
+plot(t_lti2, round(xn_lti2(3,:), 2), 'DisplayName', 'LTI');
+hold on;
+plot(t_nl2, round(xn_nl2(3,:), 2), 'DisplayName', 'NL');
+ylabel(yLabels(3), 'Interpreter', 'latex')
+
+subplot(3,2, 4)
+plot(t_lti2, xn_lti2(4,:), 'DisplayName', 'LTI');
+hold on;
+plot(t_nl2, xn_nl2(4,:), 'DisplayName', 'NL');
+ylabel(yLabels(4), 'Interpreter', 'latex')
+
+ax = subplot(3,2, 5);
+plot(t_lti2, xn_lti2(5,:), 'DisplayName', 'LTI');
+hold on;
+plot(t_nl2, xn_nl2(5,:), 'DisplayName', 'NL');
+ax.Position(1) = 0.5-ax.Position(3)/2;
+ylabel(yLabels(5), 'Interpreter', 'latex')
+xlabel('Time (s)', 'Interpreter', 'latex')
+
 sgtitle('PU states vs time with torque step')
+%xlabel('Time (s)', 'Interpreter', 'latex')
+% subplot(3,2,6)
+% plot(0,0, 'DisplayName', 'LTI')
+% hold on
+% plot(0,0, 'DisplayName', 'NL')
+% set(gca, 'visible', 'off');
+% legend('FontSize', 20)
+
+
+% figure();
+% yLabels = ["y1", "y2", "y3", "y4", "y5", "y6"];
+% for i = 1:length(Y)
+%     subplot(length(Y),1, i)
+%     plot(t_lti2, yn_lti2(i,:), 'DisplayName', 'LTI');
+%     hold on;
+%     plot(t_nl2, yn_nl2(i,:), 'DisplayName', 'NL');
+%     ylabel(yLabels(i), 'Interpreter', 'latex')
+%     legend('Location', 'Southwest')
+% end
+% sgtitle('PU outputs vs time with torque step')
+% xlabel('Time (s)', 'Interpreter', 'latex')
+
+%plot and tweak states vs time
+figure
+subplot(3,2, 1)
+plot(t_lti2, yn_lti2(1,:), 'DisplayName', 'LTI');
+hold on;
+plot(t_nl2, yn_nl2(1,:), 'DisplayName', 'NL');
+ylabel(yLabels(1), 'Interpreter', 'latex')
+
+subplot(3,2, 2)
+plot(t_lti2, yn_lti2(2,:), 'DisplayName', 'LTI');
+hold on;
+plot(t_nl2, yn_nl2(2,:), 'DisplayName', 'NL');
+ylabel(yLabels(2), 'Interpreter', 'latex')
+
+subplot(3,2, 3)
+plot(t_lti2, yn_lti2(3,:), 'DisplayName', 'LTI');
+hold on;
+plot(t_nl2, yn_nl2(3,:), 'DisplayName', 'NL');
+ylabel(yLabels(3), 'Interpreter', 'latex')
+
+subplot(3,2, 4)
+plot(t_lti2, yn_lti2(4,:), 'DisplayName', 'LTI');
+hold on;
+plot(t_nl2, yn_nl2(4,:), 'DisplayName', 'NL');
+ylabel(yLabels(4), 'Interpreter', 'latex')
+
+subplot(3,2, 5)
+plot(t_lti2, yn_lti2(5,:), 'DisplayName', 'LTI');
+hold on;
+plot(t_nl2, yn_nl2(5,:), 'DisplayName', 'NL');
+ylabel(yLabels(5), 'Interpreter', 'latex')
 xlabel('Time (s)', 'Interpreter', 'latex')
 
-figure();
-yLabels = ["y1", "y2", "y3", "y4", "y5", "y6"];
-for i = 1:length(Y)
-    subplot(length(Y),1, i)
-    plot(t_lti2, yn_lti2(i,:), 'DisplayName', 'LTI');
-    hold on;
-    plot(t_nl2, yn_nl2(i,:), 'DisplayName', 'NL');
-    ylabel(yLabels(i), 'Interpreter', 'latex')
-    legend('Location', 'Southwest')
-end
+subplot(3,2, 6)
+plot(t_lti2, yn_lti2(6,:), 'DisplayName', 'LTI');
+hold on;
+plot(t_nl2, yn_nl2(6,:), 'DisplayName', 'NL');
+ylabel(yLabels(5), 'Interpreter', 'latex')
+xlabel('Time (s)', 'Interpreter', 'latex')
+
 sgtitle('PU outputs vs time with torque step')
-xlabel('Time (s)', 'Interpreter', 'latex')
-
+%xlabel('Time (s)', 'Interpreter', 'latex')
 
 
 %% simulate a step increase in Mfe to 1% beyond rated value
