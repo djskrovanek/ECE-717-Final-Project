@@ -200,6 +200,12 @@ xlabel('Time (s)', 'Interpreter', 'latex')
 sgtitle('PU outputs vs time with torque step')
 %xlabel('Time (s)', 'Interpreter', 'latex')
 
+%% calculate pu norm of error between nominal operating point and end of trajectory
+Xerror_lti = norm(xn_lti2(:,end)-X_pu,2)
+Xerror_nl = norm(xn_nl2(:,end)-X_pu,2)
+Yerror_lti = norm(yn_lti2(:,end)-Y_pu,2)
+Yerror_nl = norm(yn_nl2(:,end)-Y_pu,2)
+
 
 %% simulate a step increase in Mfe to 1% beyond rated value
 

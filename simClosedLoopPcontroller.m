@@ -24,16 +24,19 @@ x0 = X; % initial state
 
 %% simulate a step increase in torque to 0.5% beyond rated value
 
-u2 = @(t) [U(1)*1.005; U(2)]*ones(size(t)); % step in torque at t = 0
+u2 = @(t) [U(1)*1.005; U(6)]*ones(size(t)); % step in torque at t = 0
 
-tf2 = 1000; % stop time [sec]
+tf2 = 50; % stop time [sec]
 
-%[t_nl2, u_nl2, x_nl2, y_nl2] = simNL(f, g, u2, [t0, tf2], x0);
+f_aug = @(x,u) f(x, [u(1,:); -K*x; u(2,:)]); % f(x,u) for augmented NL system with controller
+g_aug = @(x,u) g(x, [u(1,:); -K*x; u(2,:)]); % g(x,u) for augmented NL system with controller
+
+[t_nl2, u_nl2, x_nl2, y_nl2] = simNL(f_aug, g_aug, u2, [t0, tf2], x0);
 [t_lti2, u_lti2, x_lti2, y_lti2] = simLTI(A_aug, B_aug, C_aug, D_aug, X, U_aug, Y, u2, [t0 tf2], x0);
 
 figure();
 hold on;
-%plot(t_nl2, y_nl2(4,:), 'DisplayName', 'NL')
+plot(t_nl2, y_nl2(4,:), 'DisplayName', 'NL')
 plot(t_lti2, y_lti2(4,:), 'DisplayName', 'LTI')
 title('Shaft speed vs time with torque step')
 xlabel('Time $t$ (s)', 'Interpreter', 'latex')
@@ -43,7 +46,7 @@ legend()
 
 figure();
 hold on;
-%plot(t_nl2, y_nl2(6,:)*1e-6, 'DisplayName', 'NL')
+%\plot(t_nl2, y_nl2(6,:)*1e-6, 'DisplayName', 'NL')
 plot(t_lti2, y_lti2(6,:)*1e-6, 'DisplayName', 'LTI')
 title('Output power vs time with torque step')
 xlabel('Time (s)', 'Interpreter', 'latex')
@@ -59,35 +62,48 @@ U_pu = U./u_B;
 
 yn_lti2 = y_lti2./y_B;
 xn_lti2 = x_lti2./x_B;
-%yn_nl2 = y_nl2./y_B;
-%xn_nl2 = x_nl2./x_B;
+yn_nl2 = y_nl2./y_B;
+xn_nl2 = x_nl2./x_B;
 
 
 % plot all states and outputs vs time
 figure();
 yLabels = ["x1", "x2", "x3", "x4", "x5"];
 for i = 1:length(X)
-    subplot(length(X),1, i)
+    ax = subplot(3,2, i);
     hold on;
     plot(t_lti2, xn_lti2(i,:), 'DisplayName', 'LTI');
+    plot(t_nl2, xn_nl2(i,:), 'DisplayName', 'NL');
     plot(t_lti2, X_pu(i).*ones(size(t_lti2)), '--', 'DisplayName', 'X (equilibrium)')
-    %plot(t_nl2, xn_nl2(i,:), 'DisplayName', 'NL');
     ylabel(yLabels(i), 'Interpreter', 'latex')
-    legend('Location', 'Southwest')
+    xlabel('Time (s)', 'Interpreter', 'latex')
+    set(gca, 'YLimSpec', 'padded');
+    if (i ==5)
+        ax.Position(1) = 0.5-ax.Position(3)/2;
+    end
+    %legend('Location', 'Southwest')
 end
 sgtitle('PU states vs time with torque step')
-xlabel('Time (s)', 'Interpreter', 'latex')
 
 figure();
 yLabels = ["y1", "y2", "y3", "y4", "y5", "y6"];
 for i = 1:length(Y)
-    subplot(length(Y),1, i)
+    subplot(3,2, i)
     plot(t_lti2, yn_lti2(i,:), 'DisplayName', 'LTI');
     hold on;
+    plot(t_nl2, yn_nl2(i,:), 'DisplayName', 'NL');
     plot(t_lti2, Y_pu(i).*ones(size(t_lti2)), '--', 'DisplayName', 'Y (equilibrium)')
-    %plot(t_nl2, yn_nl2(i,:), 'DisplayName', 'NL');
+    set(gca, 'YLimSpec', 'padded');
     ylabel(yLabels(i), 'Interpreter', 'latex')
-    legend('Location', 'Southwest')
+    xlabel('Time (s)', 'Interpreter', 'latex')
+    %legend('Location', 'Southwest')
 end
 sgtitle('PU outputs vs time with torque step')
 xlabel('Time (s)', 'Interpreter', 'latex')
+
+%% calculate pu norm of error between nominal operating point and end of trajectory
+Xerror_lti = norm(xn_lti2(:,end)-X_pu,2)
+Xerror_nl = norm(xn_nl2(:,end)-X_pu,2)
+Yerror_lti = norm(yn_lti2(:,end)-Y_pu,2)
+Yerror_nl = norm(yn_nl2(:,end)-Y_pu,2)
+
