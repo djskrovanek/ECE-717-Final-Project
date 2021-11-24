@@ -31,13 +31,15 @@ tf1 = 1000; % stop time [sec]
 
 figure();
 hold on;
-plot(t_lti1, getNorm(y_lti1,2), 'DisplayName', 'LTI')
-plot(t_nl1, getNorm(y_nl1,2), 'DisplayName', 'NL')
-title('Norm of output vs. time', 'Interpreter','latex')
+plot(t_lti1, getNorm(x_lti1./x_B,2), 'DisplayName', 'x: LTI')
+plot(t_nl1, getNorm(x_nl1./x_B,2), 'DisplayName', 'x: NL')
+plot(t_lti1, getNorm(y_lti1./y_B,2), 'DisplayName', 'y: LTI')
+plot(t_nl1, getNorm(y_nl1./y_B,2), 'DisplayName', 'y: NL')
+title('Norm of PU state & output vs. time')%, 'Interpreter','latex')
 xlabel('Time $(s)$', 'Interpreter','latex')
-ylabel('Output norm $||y(t)||_2$', 'Interpreter','latex')
-ylim([9.5e5, 9.52e5])
-legend('Interpreter','latex')
+ylabel('Norm (PU)', 'Interpreter','latex')
+%ylim([9.5e5, 9.52e5])
+legend('Interpreter','latex','location','east')
 
 
 
@@ -200,11 +202,17 @@ xlabel('Time (s)', 'Interpreter', 'latex')
 sgtitle('PU outputs vs time with torque step')
 %xlabel('Time (s)', 'Interpreter', 'latex')
 
-%% calculate pu norm of error between nominal operating point and end of trajectory
-Xerror_lti = norm(xn_lti2(:,end)-X_pu,2)
-Xerror_nl = norm(xn_nl2(:,end)-X_pu,2)
-Yerror_lti = norm(yn_lti2(:,end)-Y_pu,2)
-Yerror_nl = norm(yn_nl2(:,end)-Y_pu,2)
+%% calculate final pu norm
+Xnorm_lti = norm(xn_lti2(:,end),2)
+Xnorm_nl = norm(xn_nl2(:,end),2)
+Ynorm_lti = norm(yn_lti2(:,end),2)
+Ynorm_nl = norm(yn_nl2(:,end),2)
+
+% normalize error between pu norms to a percent
+Xerror_lti = norm((xn_lti2(:,end)-X_pu)/X_pu,2)
+Xerror_nl = norm((xn_nl2(:,end)-X_pu)/X_pu,2)
+Yerror_lti = norm((yn_lti2(:,end)-Y_pu)/Y_pu,2)
+Yerror_nl = norm((yn_nl2(:,end)-Y_pu)/Y_pu,2)
 
 
 %% simulate a step increase in Mfe to 1% beyond rated value

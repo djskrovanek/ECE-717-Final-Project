@@ -101,9 +101,18 @@ end
 sgtitle('PU outputs vs time with torque step')
 xlabel('Time (s)', 'Interpreter', 'latex')
 
-%% calculate pu norm of error between nominal operating point and end of trajectory
-Xerror_lti = norm(xn_lti2(:,end)-X_pu,2)
-Xerror_nl = norm(xn_nl2(:,end)-X_pu,2)
-Yerror_lti = norm(yn_lti2(:,end)-Y_pu,2)
-Yerror_nl = norm(yn_nl2(:,end)-Y_pu,2)
+%% calculate final pu norm
+Xnorm_lti = norm(xn_lti2(:,end),2)
+Xnorm_nl = norm(xn_nl2(:,end),2)
+Ynorm_lti = norm(yn_lti2(:,end),2)
+Ynorm_nl = norm(yn_nl2(:,end),2)
 
+% normalize error between norms to a percent
+Xerror_lti = norm((xn_lti2(:,end)-X_pu)/X_pu,2)
+Xerror_nl = norm((xn_nl2(:,end)-X_pu)/X_pu,2)
+Yerror_lti = norm((yn_lti2(:,end)-Y_pu)/Y_pu,2)
+Yerror_nl = norm((yn_nl2(:,end)-Y_pu)/Y_pu,2)
+
+% output gain matrix K to Latex for report
+Kdisp = vpa(sym(K),3);
+latex(Kdisp)
