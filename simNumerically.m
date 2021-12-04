@@ -53,26 +53,6 @@ tf2 = 1000; % stop time [sec]
 [t_nl2, u_nl2, x_nl2, y_nl2] = simNL(f, g, u2, [t0, tf2], x0);
 [t_lti2, u_lti2, x_lti2, y_lti2] = simLTI(A, B, C, D, X, U, Y, u2, [t0 tf2], x0);
 
-figure();
-hold on;
-plot(t_nl2, y_nl2(4,:), 'DisplayName', 'NL')
-plot(t_lti2, y_lti2(4,:), 'DisplayName', 'LTI')
-title('Shaft speed vs time with torque step')
-xlabel('Time $t$ (s)', 'Interpreter', 'latex')
-ylabel('Speed $\omega$ (rad/s)', 'Interpreter', 'latex')
-%ylim([0, 2*Y(6)])
-legend()
-
-figure();
-hold on;
-plot(t_nl2, y_nl2(6,:)*1e-6, 'DisplayName', 'NL')
-plot(t_lti2, y_lti2(6,:)*1e-6, 'DisplayName', 'LTI')
-title('Output power vs time with torque step')
-xlabel('Time (s)', 'Interpreter', 'latex')
-ylabel('Output power $p_{out}$ (MW)', 'Interpreter', 'latex')
-%ylim([0, 2*Y(6)])
-legend()
-
 % calculate normalized (pu) outputs and states
 
 X_pu = X./x_B;
@@ -83,6 +63,28 @@ yn_lti2 = y_lti2./y_B;
 xn_lti2 = x_lti2./x_B;
 yn_nl2 = y_nl2./y_B;
 xn_nl2 = x_nl2./x_B;
+
+figure();
+hold on;
+plot(t_nl2, y_nl2(4,:), 'DisplayName', 'NL')
+plot(t_lti2, y_lti2(4,:), 'DisplayName', 'LTI')
+plot(t_nl2, Y(4).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
+title('Shaft speed vs time with torque step')
+xlabel('Time $t$ (s)', 'Interpreter', 'latex')
+ylabel('Speed $\omega$ (rad/s)', 'Interpreter', 'latex')
+%ylim([0, 2*Y(6)])
+legend()
+
+figure();
+hold on;
+plot(t_nl2, y_nl2(6,:)*1e-6, 'DisplayName', 'NL')
+plot(t_lti2, y_lti2(6,:)*1e-6, 'DisplayName', 'LTI')
+plot(t_nl2, Y(6)*1e-6.*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
+title('Output power vs time with torque step')
+xlabel('Time (s)', 'Interpreter', 'latex')
+ylabel('Output power $p_{out}$ (MW)', 'Interpreter', 'latex')
+%ylim([0, 2*Y(6)])
+legend()
 
 
 % plot all states and outputs vs time
@@ -108,30 +110,36 @@ subplot(3,2, 1)
 plot(t_lti2, xn_lti2(1,:), 'DisplayName', 'LTI');
 hold on;
 plot(t_nl2, xn_nl2(1,:), 'DisplayName', 'NL');
+plot(t_nl2, X_pu(1).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(1), 'Interpreter', 'latex')
 
 subplot(3,2, 2)
 plot(t_lti2, xn_lti2(2,:), 'DisplayName', 'LTI');
 hold on;
 plot(t_nl2, xn_nl2(2,:), 'DisplayName', 'NL');
+plot(t_nl2, X_pu(2).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(2), 'Interpreter', 'latex')
 
 subplot(3,2, 3)
-plot(t_lti2, round(xn_lti2(3,:), 2), 'DisplayName', 'LTI');
+plot(t_lti2, xn_lti2(3,:), 'DisplayName', 'LTI');
 hold on;
-plot(t_nl2, round(xn_nl2(3,:), 2), 'DisplayName', 'NL');
+plot(t_nl2, xn_nl2(3,:), 'DisplayName', 'NL');
+plot(t_nl2, X_pu(3).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(3), 'Interpreter', 'latex')
+ylim([2.54, 2.56])
 
 subplot(3,2, 4)
 plot(t_lti2, xn_lti2(4,:), 'DisplayName', 'LTI');
 hold on;
 plot(t_nl2, xn_nl2(4,:), 'DisplayName', 'NL');
+plot(t_nl2, X_pu(4).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(4), 'Interpreter', 'latex')
 
 ax = subplot(3,2, 5);
 plot(t_lti2, xn_lti2(5,:), 'DisplayName', 'LTI');
 hold on;
 plot(t_nl2, xn_nl2(5,:), 'DisplayName', 'NL');
+plot(t_nl2, X_pu(5).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ax.Position(1) = 0.5-ax.Position(3)/2;
 ylabel(yLabels(5), 'Interpreter', 'latex')
 xlabel('Time (s)', 'Interpreter', 'latex')
@@ -160,35 +168,42 @@ sgtitle('PU states vs time with torque step')
 % xlabel('Time (s)', 'Interpreter', 'latex')
 
 %plot and tweak states vs time
+yLabels = ["y1", "y2", "y3", "y4", "y5", "y6"];
+
 figure
 subplot(3,2, 1)
 plot(t_lti2, yn_lti2(1,:), 'DisplayName', 'LTI');
 hold on;
 plot(t_nl2, yn_nl2(1,:), 'DisplayName', 'NL');
+plot(t_nl2, Y_pu(1).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(1), 'Interpreter', 'latex')
 
 subplot(3,2, 2)
 plot(t_lti2, yn_lti2(2,:), 'DisplayName', 'LTI');
 hold on;
 plot(t_nl2, yn_nl2(2,:), 'DisplayName', 'NL');
+plot(t_nl2, Y_pu(2).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(2), 'Interpreter', 'latex')
 
 subplot(3,2, 3)
 plot(t_lti2, yn_lti2(3,:), 'DisplayName', 'LTI');
 hold on;
 plot(t_nl2, yn_nl2(3,:), 'DisplayName', 'NL');
+plot(t_nl2, Y_pu(3).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(3), 'Interpreter', 'latex')
 
 subplot(3,2, 4)
 plot(t_lti2, yn_lti2(4,:), 'DisplayName', 'LTI');
 hold on;
 plot(t_nl2, yn_nl2(4,:), 'DisplayName', 'NL');
+plot(t_nl2, Y_pu(4).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(4), 'Interpreter', 'latex')
 
 subplot(3,2, 5)
 plot(t_lti2, yn_lti2(5,:), 'DisplayName', 'LTI');
 hold on;
 plot(t_nl2, yn_nl2(5,:), 'DisplayName', 'NL');
+plot(t_nl2, Y_pu(5).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(5), 'Interpreter', 'latex')
 xlabel('Time (s)', 'Interpreter', 'latex')
 
@@ -196,7 +211,8 @@ subplot(3,2, 6)
 plot(t_lti2, yn_lti2(6,:), 'DisplayName', 'LTI');
 hold on;
 plot(t_nl2, yn_nl2(6,:), 'DisplayName', 'NL');
-ylabel(yLabels(5), 'Interpreter', 'latex')
+plot(t_nl2, Y_pu(6).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
+ylabel(yLabels(6), 'Interpreter', 'latex')
 xlabel('Time (s)', 'Interpreter', 'latex')
 
 sgtitle('PU outputs vs time with torque step')

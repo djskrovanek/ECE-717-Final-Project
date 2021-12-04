@@ -28,8 +28,20 @@ u2 = @(t) [U(1)*1.005; U(6)]*ones(size(t)); % step in torque at t = 0
 
 tf2 = 50; % stop time [sec]
 
-f_aug = @(x,u) f(x, [u(1,:); -K*x; u(2,:)]); % f(x,u) for augmented NL system with controller
-g_aug = @(x,u) g(x, [u(1,:); -K*x; u(2,:)]); % g(x,u) for augmented NL system with controller
+% f(x,u) for augmented NL system with controller. New input u has dimension 2 x length(t).
+% Using same feedback law \tilde{u}=-k*\tilde{x}. note controller acts on the error \tilde{x}=x-X, not just x.
+f_aug = @(x,u) f(x, [u(1,:); U(2:5)-K*(x-X); u(2,:)]);
+% g(x,u) for augmented NL system with controller. New input u has dimension 2 x length(t).
+g_aug = @(x,u) g(x, [u(1,:); U(2:5)-K*(x-X); u(2,:)]);
+
+f_aug(X, [U(1); U(6)])
+g_aug(X, [U(1); U(6)])
+
+t3 = ones(1,10);
+x3 = X*size(t3);
+u3 = [U(1);U(6)]*size(t3);
+f_aug(x3,u3)
+g_aug(x3,u3)
 
 [t_nl2, u_nl2, x_nl2, y_nl2] = simNL(f_aug, g_aug, u2, [t0, tf2], x0);
 [t_lti2, u_lti2, x_lti2, y_lti2] = simLTI(A_aug, B_aug, C_aug, D_aug, X, U_aug, Y, u2, [t0 tf2], x0);
