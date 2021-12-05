@@ -24,18 +24,22 @@ x0 = X; % initial state
 
 %% simulate a step increase in torque to 0.5% beyond rated value
 
-u2 = @(t) [U(1)*1.005; U(6)]*ones(size(t)); % step in torque at t = 0
+u2_aug = @(t) [U(1)*1.005; U(6)]*ones(size(t)); % step in torque at t = 0
 
 tf2 = 30; % stop time [sec]
 
-% f(x,u) for augmented NL system with controller. New input u has dimension 2 x length(t).
+% f(x,u) for augmented NL system with controller. New input u_aug has dimension 2 x length(t).
 % Using same feedback law \tilde{u}=-k*\tilde{x}. note controller acts on the error \tilde{x}=x-X, not just x.
-f_aug = @(x,u) f(x, [u(1,:); U(2:5)-K*(x-X); u(2,:)]);
-% g(x,u) for augmented NL system with controller. New input u has dimension 2 x length(t).
-g_aug = @(x,u) g(x, [u(1,:); U(2:5)-K*(x-X); u(2,:)]);
+f_aug = @(x,u_aug) f(x, [u_aug(1,:); U(2:5)-K*(x-X); u_aug(2,:)]);
+% g(x,u) for augmented NL system with controller. New input u_aug has dimension 2 x length(t).
+g_aug = @(x,u_aug) g(x, [u_aug(1,:); U(2:5)-K*(x-X); u_aug(2,:)]);
 
-[t_nl2, u_nl2, x_nl2, y_nl2] = simNL(f_aug, g_aug, u2, [t0, tf2], x0);
-[t_lti2, u_lti2, x_lti2, y_lti2] = simLTI(A_aug, B_aug, C_aug, D_aug, X, U_aug, Y, u2, [t0 tf2], x0);
+[t_nl2, u_aug_nl2, x_nl2, y_nl2] = simNL(f_aug, g_aug, u2_aug, [t0, tf2], x0);
+[t_lti2, u_aug_lti2, x_lti2, y_lti2] = simLTI(A_aug, B_aug, C_aug, D_aug, X, U_aug, Y, u2_aug, [t0 tf2], x0);
+
+% calculate the full input vector u with 6 inputs from u_aug
+u_nl2 = [u_aug_nl2(1,:); U(2:5)-K*(x_nl2-X); u_aug_nl2(2,:)];
+u_lti2 = [u_aug_lti2(1,:); U(2:5)-K*(x_lti2-X); u_aug_lti2(2,:)];
 
 figure();
 hold on;
@@ -65,11 +69,13 @@ U_pu = U./u_B;
 
 yn_lti2 = y_lti2./y_B;
 xn_lti2 = x_lti2./x_B;
+un_lti2 = u_lti2./u_B;
 yn_nl2 = y_nl2./y_B;
 xn_nl2 = x_nl2./x_B;
+un_nl2 = u_nl2./u_B;
 
 
-% plot all states and outputs vs time
+% plot all states, outputs, and inputs vs time
 figure();
 yLabels = ["x1", "x2", "x3", "x4", "x5"];
 for i = 1:length(X)
@@ -77,7 +83,7 @@ for i = 1:length(X)
     hold on;
     plot(t_lti2, xn_lti2(i,:), 'DisplayName', 'LTI');
     plot(t_nl2, xn_nl2(i,:), 'DisplayName', 'NL');
-    plot(t_lti2, X_pu(i).*ones(size(t_lti2)), '--', 'DisplayName', 'X (equilibrium)')
+    plot(t_lti2, X_pu(i).*ones(size(t_lti2)), '--', 'DisplayName', 'Equilibrium')
     ylabel(yLabels(i), 'Interpreter', 'latex')
     xlabel('Time (s)', 'Interpreter', 'latex')
     set(gca, 'YLimSpec', 'padded');
@@ -95,13 +101,29 @@ for i = 1:length(Y)
     plot(t_lti2, yn_lti2(i,:), 'DisplayName', 'LTI');
     hold on;
     plot(t_nl2, yn_nl2(i,:), 'DisplayName', 'NL');
-    plot(t_lti2, Y_pu(i).*ones(size(t_lti2)), '--', 'DisplayName', 'Y (equilibrium)')
+    plot(t_lti2, Y_pu(i).*ones(size(t_lti2)), '--', 'DisplayName', 'Equilibrium')
     set(gca, 'YLimSpec', 'padded');
     ylabel(yLabels(i), 'Interpreter', 'latex')
     xlabel('Time (s)', 'Interpreter', 'latex')
     %legend('Location', 'Southwest')
 end
 sgtitle('PU outputs vs time with torque step')
+xlabel('Time (s)', 'Interpreter', 'latex')
+
+figure();
+yLabels = ["u1", "u2", "u3", "u4", "u5", "u6"];
+for i = 1:6
+    subplot(3,2, i)
+    plot(t_lti2, un_lti2(i,:), 'DisplayName', 'LTI');
+    hold on;
+    plot(t_nl2, un_nl2(i,:), 'DisplayName', 'NL');
+    plot(t_lti2, U_pu(i).*ones(size(t_lti2)), '--', 'DisplayName', 'Equilibrium')
+    set(gca, 'YLimSpec', 'padded');
+    ylabel(yLabels(i), 'Interpreter', 'latex')
+    xlabel('Time (s)', 'Interpreter', 'latex')
+    %legend('Location', 'Southwest')
+end
+sgtitle('PU inputs vs time with torque step')
 xlabel('Time (s)', 'Interpreter', 'latex')
 
 %% calculate final pu norm
