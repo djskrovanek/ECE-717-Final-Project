@@ -39,7 +39,7 @@ p2 = 96; % pole count
 W_mR2 = 1.5; % rad/s
 
 H2 = 3.5; % inertia constant [s]
-beta2 = 10; % [Nm/s], this value was assumed. Scaling lab SEM beta would give too much friction.
+beta2 = 20e3; % [Nm*s], set to give roughly 5% of output power dissipation at rated speed
 
 V_in2 = 10e3; % dc input (grid) voltage [V] 
 

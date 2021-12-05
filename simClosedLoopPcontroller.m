@@ -1,3 +1,5 @@
+% simulates closed-loop (with P controller) response of LTI and NL system
+
 clear all; close all; clc;
 
 [params] = CalcEquilibrium; % fill workspace with parameters
@@ -22,9 +24,9 @@ t0 = 0; % initial time [sec]
 
 x0 = X; % initial state
 
-%% simulate a step increase in torque to 0.5% beyond rated value
+%% simulate a step increase in torque to 5% beyond rated value
 
-u2_aug = @(t) [U(1)*1.005; U(6)]*ones(size(t)); % step in torque at t = 0
+u2_aug = @(t) [U(1)*1.05; U(6)]*ones(size(t)); % step in torque at t = 0
 
 tf2 = 30; % stop time [sec]
 
@@ -53,7 +55,7 @@ legend()
 
 figure();
 hold on;
-%\plot(t_nl2, y_nl2(6,:)*1e-6, 'DisplayName', 'NL')
+plot(t_nl2, y_nl2(6,:)*1e-6, 'DisplayName', 'NL')
 plot(t_lti2, y_lti2(6,:)*1e-6, 'DisplayName', 'LTI')
 title('Output power vs time with torque step')
 xlabel('Time (s)', 'Interpreter', 'latex')

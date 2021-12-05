@@ -1,3 +1,5 @@
+% simulates open-loop response of LTI and NL system to given input
+
 clear all; close all; clc;
 
 [params] = CalcEquilibrium; % fill workspace with parameters
@@ -44,9 +46,9 @@ legend('Interpreter','latex','location','east')
 
 
 
-%% simulate a step increase in torque to 0.5% beyond rated value
+%% simulate a step increase in torque to 5% beyond rated value
 
-u2 = @(t) [U(1)*1.005; U(2:6)]*ones(size(t)); % step in torque at t = 0
+u2 = @(t) [U(1)*1.05; U(2:6)]*ones(size(t)); % step in torque at t = 0
 
 tf2 = 1000; % stop time [sec]
 
