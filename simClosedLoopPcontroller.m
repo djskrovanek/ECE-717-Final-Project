@@ -28,7 +28,7 @@ x0 = X; % initial state
 
 u2_aug = @(t) [U(1)*1.05; U(6)]*ones(size(t)); % step in torque at t = 0
 
-tf2 = 30; % stop time [sec]
+tf2 = 20; % stop time [sec]
 
 % f(x,u) for augmented NL system with controller. New input u_aug has dimension 2 x length(t).
 % Using same feedback law \tilde{u}=-k*\tilde{x}. note controller acts on the error \tilde{x}=x-X, not just x.
