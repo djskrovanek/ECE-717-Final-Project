@@ -45,13 +45,15 @@ u_lti2 = [u_aug_lti2(1,:); U(2:5)-K*(x_lti2-X); u_aug_lti2(2,:)];
 
 figure();
 hold on;
-plot(t_nl2, y_nl2(4,:), 'DisplayName', 'NL')
-plot(t_lti2, y_lti2(4,:), 'DisplayName', 'LTI')
-title('Shaft speed vs time with torque step')
+plot(t_nl2, y_nl2(4,:)/y_B(4), 'DisplayName', 'NL')
+plot(t_lti2, y_lti2(4,:)/y_B(4), 'DisplayName', 'LTI')
+plot(t_lti2, Y(4)/y_B(4).*ones(size(t_lti2)), '--', 'DisplayName', 'Equilibrium')
+title('P-controller shaft speed vs time with torque step')
 xlabel('Time $t$ (s)', 'Interpreter', 'latex')
-ylabel('Speed $\omega$ (rad/s)', 'Interpreter', 'latex')
+ylabel('$x_4$ (pu)', 'Interpreter', 'latex')
+set(gca, 'YLimSpec', 'padded');
 %ylim([0, 2*Y(6)])
-legend()
+legend('location', 'east')
 
 figure();
 hold on;
@@ -79,7 +81,7 @@ un_nl2 = u_nl2./u_B;
 
 % plot all states, outputs, and inputs vs time
 figure();
-yLabels = ["x1", "x2", "x3", "x4", "x5"];
+yLabels = ["x1 (pu)", "x2 (pu)", "x3 (pu)", "x4 (pu)", "x5 (pu)"];
 for i = 1:length(X)
     ax = subplot(3,2, i);
     hold on;
@@ -97,7 +99,7 @@ end
 sgtitle('PU states vs time with torque step')
 
 figure();
-yLabels = ["y1", "y2", "y3", "y4", "y5", "y6"];
+yLabels = ["y1 (pu)", "y2 (pu)", "y3 (pu)", "y4 (pu)", "y5 (pu)", "y6 (pu)"];
 for i = 1:length(Y)
     subplot(3,2, i)
     plot(t_lti2, yn_lti2(i,:), 'DisplayName', 'LTI');
@@ -113,7 +115,7 @@ sgtitle('PU outputs vs time with torque step')
 xlabel('Time (s)', 'Interpreter', 'latex')
 
 figure();
-yLabels = ["u1", "u2", "u3", "u4", "u5", "u6"];
+yLabels = ["u1 (pu)", "u2 (pu)", "u3 (pu)", "u4 (pu)", "u5 (pu)", "u6 (pu)"];
 for i = 1:6
     subplot(3,2, i)
     plot(t_lti2, un_lti2(i,:), 'DisplayName', 'LTI');

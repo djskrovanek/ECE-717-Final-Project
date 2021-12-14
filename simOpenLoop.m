@@ -105,7 +105,7 @@ legend()
 % xlabel('Time (s)', 'Interpreter', 'latex')
 
 %plot and tweak states vs time
-yLabels = ["x1", "x2", "x3", "x4", "x5"];
+yLabels = ["$x_1$ (pu)", "$x_2$ (pu)", "$x_3$ (pu)", "$x_4$ (pu)", "$x_5$ (pu)"];
 
 figure
 subplot(3,2, 1)
@@ -114,6 +114,7 @@ hold on;
 plot(t_nl2, xn_nl2(1,:), 'DisplayName', 'NL');
 plot(t_nl2, X_pu(1).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(1), 'Interpreter', 'latex')
+xlabel('Time (s)', 'Interpreter', 'latex')
 
 subplot(3,2, 2)
 plot(t_lti2, xn_lti2(2,:), 'DisplayName', 'LTI');
@@ -121,6 +122,7 @@ hold on;
 plot(t_nl2, xn_nl2(2,:), 'DisplayName', 'NL');
 plot(t_nl2, X_pu(2).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(2), 'Interpreter', 'latex')
+xlabel('Time (s)', 'Interpreter', 'latex')
 
 subplot(3,2, 3)
 plot(t_lti2, xn_lti2(3,:), 'DisplayName', 'LTI');
@@ -128,7 +130,8 @@ hold on;
 plot(t_nl2, xn_nl2(3,:), 'DisplayName', 'NL');
 plot(t_nl2, X_pu(3).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(3), 'Interpreter', 'latex')
-ylim([2.54, 2.56])
+ylim([2.43, 2.45])
+xlabel('Time (s)', 'Interpreter', 'latex')
 
 subplot(3,2, 4)
 plot(t_lti2, xn_lti2(4,:), 'DisplayName', 'LTI');
@@ -136,6 +139,7 @@ hold on;
 plot(t_nl2, xn_nl2(4,:), 'DisplayName', 'NL');
 plot(t_nl2, X_pu(4).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(4), 'Interpreter', 'latex')
+xlabel('Time (s)', 'Interpreter', 'latex')
 
 ax = subplot(3,2, 5);
 plot(t_lti2, xn_lti2(5,:), 'DisplayName', 'LTI');
@@ -170,7 +174,7 @@ sgtitle('PU states vs time with torque step')
 % xlabel('Time (s)', 'Interpreter', 'latex')
 
 %plot and tweak states vs time
-yLabels = ["y1", "y2", "y3", "y4", "y5", "y6"];
+yLabels = ["$y_1$", "$y_2$", "$y_3$", "$y_4$", "$y_5$", "$y_6$"];
 
 figure
 subplot(3,2, 1)
@@ -179,6 +183,7 @@ hold on;
 plot(t_nl2, yn_nl2(1,:), 'DisplayName', 'NL');
 plot(t_nl2, Y_pu(1).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(1), 'Interpreter', 'latex')
+xlabel('Time (s)', 'Interpreter', 'latex')
 
 subplot(3,2, 2)
 plot(t_lti2, yn_lti2(2,:), 'DisplayName', 'LTI');
@@ -186,6 +191,7 @@ hold on;
 plot(t_nl2, yn_nl2(2,:), 'DisplayName', 'NL');
 plot(t_nl2, Y_pu(2).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(2), 'Interpreter', 'latex')
+xlabel('Time (s)', 'Interpreter', 'latex')
 
 subplot(3,2, 3)
 plot(t_lti2, yn_lti2(3,:), 'DisplayName', 'LTI');
@@ -193,6 +199,7 @@ hold on;
 plot(t_nl2, yn_nl2(3,:), 'DisplayName', 'NL');
 plot(t_nl2, Y_pu(3).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(3), 'Interpreter', 'latex')
+xlabel('Time (s)', 'Interpreter', 'latex')
 
 subplot(3,2, 4)
 plot(t_lti2, yn_lti2(4,:), 'DisplayName', 'LTI');
@@ -200,6 +207,7 @@ hold on;
 plot(t_nl2, yn_nl2(4,:), 'DisplayName', 'NL');
 plot(t_nl2, Y_pu(4).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(4), 'Interpreter', 'latex')
+xlabel('Time (s)', 'Interpreter', 'latex')
 
 subplot(3,2, 5)
 plot(t_lti2, yn_lti2(5,:), 'DisplayName', 'LTI');
@@ -208,6 +216,7 @@ plot(t_nl2, yn_nl2(5,:), 'DisplayName', 'NL');
 plot(t_nl2, Y_pu(5).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(5), 'Interpreter', 'latex')
 xlabel('Time (s)', 'Interpreter', 'latex')
+
 
 subplot(3,2, 6)
 plot(t_lti2, yn_lti2(6,:), 'DisplayName', 'LTI');

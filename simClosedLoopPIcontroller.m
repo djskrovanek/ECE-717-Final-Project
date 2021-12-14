@@ -82,7 +82,7 @@ un_nl2 = u_nl2./u_B;
 
 %plot all states, outputs, and inputs vs time
 figure();
-yLabels = ["x1", "x2", "x3", "x4", "x5"];
+yLabels = ["$x_1$ (pu)", "$x_2$ (pu)", "$x_3$ (pu)", "$x_4$ (pu)", "$x_5$ (pu)"];
 for i = 1:length(X)
     ax = subplot(3,2, i);
     hold on;
@@ -100,7 +100,7 @@ end
 sgtitle('PU states vs time with torque step')
 
 figure();
-yLabels = ["y1", "y2", "y3", "y4", "y5", "y6"];
+yLabels = ["$y_1$ (pu)", "$y_2$ (pu)", "$y_3$ (pu)", "$y_4$ (pu)", "$y_5$ (pu)", "$y_6$ (pu)"];
 for i = 1:length(Y)
     subplot(3,2, i)
     plot(t_lti2, yn_lti2(i,:), 'DisplayName', 'LTI');
@@ -116,7 +116,7 @@ sgtitle('PU outputs vs time with torque step')
 xlabel('Time (s)', 'Interpreter', 'latex')
 
 figure();
-yLabels = ["u1", "u2", "u3", "u4", "u5", "u6"];
+yLabels = ["$u_1$ (pu)", "$u_2$ (pu)", "$u_3$ (pu)", "$u_4$ (pu)", "$u_5$ (pu)", "$u_6$ (pu)"];
 for i = 1:6
     subplot(3,2, i)
     plot(t_lti2, un_lti2(i,:), 'DisplayName', 'LTI');
