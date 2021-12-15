@@ -97,7 +97,8 @@ for i = 1:length(X)
     end
     %legend('Location', 'Southwest')
 end
-sgtitle('PU states vs time with torque step')
+%sgtitle('PU states vs time with torque step')
+exportgraphics(gcf,'PI controller states vs time.jpg','Resolution',300)
 
 figure();
 yLabels = ["$y_1$ (pu)", "$y_2$ (pu)", "$y_3$ (pu)", "$y_4$ (pu)", "$y_5$ (pu)", "$y_6$ (pu)"];
@@ -112,8 +113,9 @@ for i = 1:length(Y)
     xlabel('Time (s)', 'Interpreter', 'latex')
     %legend('Location', 'Southwest')
 end
-sgtitle('PU outputs vs time with torque step')
+%sgtitle('PU outputs vs time with torque step')
 xlabel('Time (s)', 'Interpreter', 'latex')
+exportgraphics(gcf,'PI controller outputs vs time.jpg','Resolution',300)
 
 figure();
 yLabels = ["$u_1$ (pu)", "$u_2$ (pu)", "$u_3$ (pu)", "$u_4$ (pu)", "$u_5$ (pu)", "$u_6$ (pu)"];
@@ -126,10 +128,14 @@ for i = 1:6
     set(gca, 'YLimSpec', 'padded');
     ylabel(yLabels(i), 'Interpreter', 'latex')
     xlabel('Time (s)', 'Interpreter', 'latex')
+    if (i==3)
+        ylim([-0.4, -0.37])
+    end
     %legend('Location', 'Southwest')
 end
-sgtitle('PU inputs vs time with torque step')
+%sgtitle('PU inputs vs time with torque step')
 xlabel('Time (s)', 'Interpreter', 'latex')
+exportgraphics(gcf,'PI controller inputs vs time.jpg','Resolution',300)
 
 % calculate final pu norm
 Xnorm_lti = norm(xn_lti2(:,end),2)

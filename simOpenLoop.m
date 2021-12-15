@@ -37,11 +37,14 @@ plot(t_lti1, getNorm(x_lti1./x_B,2), 'DisplayName', 'x: LTI')
 plot(t_nl1, getNorm(x_nl1./x_B,2), 'DisplayName', 'x: NL')
 plot(t_lti1, getNorm(y_lti1./y_B,2), 'DisplayName', 'y: LTI')
 plot(t_nl1, getNorm(y_nl1./y_B,2), 'DisplayName', 'y: NL')
-title('Norm of PU state & output vs. time')%, 'Interpreter','latex')
+%title('Norm of PU state & output vs. time')%, 'Interpreter','latex')
 xlabel('Time $(s)$', 'Interpreter','latex')
 ylabel('Norm (PU)', 'Interpreter','latex')
 %ylim([9.5e5, 9.52e5])
 legend('Interpreter','latex','location','east')
+set(gca, 'YLimSpec', 'padded');
+exportgraphics(gcf,'Output norm equilibrium.jpg','Resolution',300)
+
 
 
 
@@ -150,7 +153,9 @@ ax.Position(1) = 0.5-ax.Position(3)/2;
 ylabel(yLabels(5), 'Interpreter', 'latex')
 xlabel('Time (s)', 'Interpreter', 'latex')
 
-sgtitle('PU states vs time with torque step')
+%sgtitle('PU states vs time with torque step')
+exportgraphics(gcf,'PU states vs time with torque step.jpg','Resolution',300)
+
 %xlabel('Time (s)', 'Interpreter', 'latex')
 % subplot(3,2,6)
 % plot(0,0, 'DisplayName', 'LTI')
@@ -226,8 +231,8 @@ plot(t_nl2, Y_pu(6).*ones(size(t_nl2)), '--', 'DisplayName', 'Equilibrium')
 ylabel(yLabels(6), 'Interpreter', 'latex')
 xlabel('Time (s)', 'Interpreter', 'latex')
 
-sgtitle('PU outputs vs time with torque step')
-%xlabel('Time (s)', 'Interpreter', 'latex')
+%sgtitle('PU outputs vs time with torque step')
+exportgraphics(gcf,'PU outputs vs time with torque step.jpg','Resolution',300)
 
 %% calculate final pu norm
 Xnorm_lti = norm(xn_lti2(:,end),2)

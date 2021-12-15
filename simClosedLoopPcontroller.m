@@ -48,12 +48,13 @@ hold on;
 plot(t_nl2, y_nl2(4,:)/y_B(4), 'DisplayName', 'NL')
 plot(t_lti2, y_lti2(4,:)/y_B(4), 'DisplayName', 'LTI')
 plot(t_lti2, Y(4)/y_B(4).*ones(size(t_lti2)), '--', 'DisplayName', 'Equilibrium')
-title('P-controller shaft speed vs time with torque step')
+%title('P-controller shaft speed vs time with torque step')
 xlabel('Time $t$ (s)', 'Interpreter', 'latex')
 ylabel('$x_4$ (pu)', 'Interpreter', 'latex')
 set(gca, 'YLimSpec', 'padded');
 %ylim([0, 2*Y(6)])
 legend('location', 'east')
+exportgraphics(gcf,'P Controller Shaft Speed vs Time.jpg','Resolution',300)
 
 figure();
 hold on;
