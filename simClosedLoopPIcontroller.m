@@ -29,7 +29,7 @@ x0_aug = [X; 0]; % initial state
 
 % simulate a step increase in torque to 5% beyond rated value
 
-u2_aug = @(t) [U(1)*1.05; U(6)]*ones(size(t)); % step in torque at t = 0
+u2_aug = @(t) [U(1)*1.5; U(6)]*ones(size(t)); % step in torque at t = 0
 
 tf2 = 20; % stop time [sec]
 
